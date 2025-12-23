@@ -16,6 +16,20 @@ const WIDGET_CATEGORIES = [
         defaultSize: { w: 2, h: 3 },
       },
       {
+        id: 'price-chart',
+        type: 'price-chart',
+        title: 'Price Chart',
+        description: 'View historical price charts with multiple time ranges',
+        defaultSize: { w: 3, h: 3 },
+      },
+      {
+        id: 'fear-greed-index',
+        type: 'fear-greed-index',
+        title: 'Fear & Greed Index',
+        description: 'Track crypto market sentiment with the Fear & Greed Index',
+        defaultSize: { w: 2, h: 2 },
+      },
+      {
         id: 'trending-tokens',
         type: 'trending-tokens',
         title: 'Trending Tokens',

@@ -33,8 +33,6 @@ export async function GET(request) {
 
     const coingeckoUrl = `https://api.coingecko.com/api/v3/simple/token_price/base?${params.toString()}`;
 
-    console.log('🔗 Proxying CoinGecko request:', coingeckoUrl);
-
     // Make request to CoinGecko
     const response = await fetch(coingeckoUrl, {
       headers: {
@@ -45,7 +43,7 @@ export async function GET(request) {
     });
 
     if (!response.ok) {
-      console.error('❌ CoinGecko API error:', response.status, response.statusText);
+      console.error('CoinGecko API error:', response.status, response.statusText);
       
       // Handle specific error codes
       if (response.status === 429) {
@@ -62,7 +60,6 @@ export async function GET(request) {
     }
 
     const data = await response.json();
-    console.log('✅ CoinGecko response received');
 
     // Return the data with CORS headers
     return NextResponse.json(data, {
@@ -72,7 +69,7 @@ export async function GET(request) {
     });
 
   } catch (error) {
-    console.error('❌ API Route error:', error);
+    console.error('API Route error:', error.message);
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
       { status: 500 }

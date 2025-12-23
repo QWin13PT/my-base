@@ -18,22 +18,12 @@ export default function Home() {
 
   // Show onboarding modal when user needs it
   useEffect(() => {
-    console.log('🔍 Home: checking onboarding', { 
-      needsOnboarding, 
-      showOnboarding, 
-      hasUser: !!user,
-      isConnected,
-      isAuthenticated 
-    });
-    
     if (needsOnboarding && !showOnboarding) {
-      console.log('✅ Triggering onboarding modal');
       setShowOnboarding(true);
     }
-  }, [needsOnboarding, showOnboarding, user, isConnected, isAuthenticated]);
+  }, [needsOnboarding, showOnboarding]);
 
   const handleOnboardingComplete = async () => {
-    console.log('🎉 Onboarding completed, refreshing user');
     await refreshUser();
     setShowOnboarding(false);
   };
@@ -93,37 +83,31 @@ export default function Home() {
  
           <div className="space-y-6">
 
-            {/* Widget Grid */}
-            {widgetsLoading ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="text-center">
-                  <div className="mb-4 text-4xl">⏳</div>
-                  <p className="text-gray-600">Loading your dashboard...</p>
-                </div>
-              </div>
-            ) : (
-              <ResizableWidgetGrid
-                widgets={widgets}
-                onWidgetsChange={reorderWidgets}
-              />
-            )}
+            {/* Widget Grid - Show immediately, widgets handle their own loading */}
+            <ResizableWidgetGrid
+              widgets={widgets}
+              onWidgetsChange={reorderWidgets}
+            />
 
             {/* Help Text */}
-            <div className="rounded-lg bg-blue-50 p-6 border border-blue-100">
-              <div className="flex items-start gap-3">
-                <div className="text-2xl">💡</div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">
-                    Drag, Drop & Resize Dashboard
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    <strong>Drag:</strong> Click and drag the top icon to reorder widgets.<br />
-                    <strong>Resize:</strong> Drag any corner of a widget to resize it.<br />
-                    Your layout is automatically saved to localStorage.
-                  </p>
+            {!widgetsLoading && widgets.length === 0 && (
+              <div className="rounded-lg bg-blue-50 p-6 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">👋</div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      Welcome to Your Dashboard
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Get started by adding widgets to your dashboard. Click the <strong>+</strong> button in the header to browse available widgets.
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <strong>Tip:</strong> You can drag, resize, and customize each widget to create your perfect dashboard.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </main>

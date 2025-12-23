@@ -94,21 +94,12 @@ export default function PriceTracker({
     setError(null);
     
     try {
-      console.log('📊 Fetching price for token:', {
-        name: token.name,
-        symbol: token.symbol,
-        address: token.address,
-        coingeckoId: token.coingecko_id
-      });
-      
       if (!token.address || token.address === 'null' || token.address === '') {
         throw new Error('Token address not available');
       }
       
       // Call CoinGecko API with the token address
       const data = await getTokenPrice(token.address);
-      
-      console.log('✅ Price data received:', data);
       
       // Extract the actual data (API returns { data: {...}, cached: bool })
       const priceInfo = data.data || data;
@@ -333,9 +324,9 @@ export default function PriceTracker({
           // No token selected - Direct user to settings
           <div className="text-center">
             <div className="text-6xl mb-4">💰</div>
-            <p className="text-white/60 mb-2">No token selected</p>
-            <p className="text-sm text-white/40">
-              Click the <span className="text-white/60">⋮</span> menu to select a token
+            <p className="opacity-60 mb-2">No token selected</p>
+            <p className="text-sm opacity-40">
+              Click the <span className="opacity-60">⋮</span> menu to select a token
             </p>
           </div>
         ) : (
@@ -345,19 +336,19 @@ export default function PriceTracker({
             {/* Price */}
             {loading ? (
               <div className="animate-pulse">
-                <div className="h-12 bg-white/10 rounded w-32 mx-auto mb-4"></div>
+                <div className="h-12 bg-current/10 rounded w-32 mx-auto mb-4"></div>
               </div>
             ) : error ? (
-              <p className="text-red-400 text-sm">Failed to load price</p>
+              <p className="text-red-500 text-sm">Failed to load price</p>
             ) : priceData ? (
               <>
-                <div className="text-3xl font-bold text-white mb-2">
+                <div className="text-3xl font-bold mb-2">
                   {formatPrice(priceData.price)}
                 </div>
                 
                 {/* 24h Change */}
                 <div className={`text-base font-semibold mb-6 ${
-                  priceData.change24h >= 0 ? 'text-green-400' : 'text-red-400'
+                  priceData.change24h >= 0 ? 'text-green-600' : 'text-red-600'
                 }`}>
                   {priceData.change24h >= 0 ? '↑' : '↓'} 
                   {Math.abs(priceData.change24h).toFixed(2)}% (24h)
@@ -365,15 +356,15 @@ export default function PriceTracker({
                 
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-4 text-left">
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-xs text-white/60 mb-1">Market Cap</p>
-                    <p className="text-sm font-semibold text-white">
+                  <div className="bg-current/5 rounded-lg p-3">
+                    <p className="text-xs opacity-60 mb-1">Market Cap</p>
+                    <p className="text-sm font-semibold">
                       {formatLargeNumber(priceData.marketCap)}
                     </p>
                   </div>
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-xs text-white/60 mb-1">24h Volume</p>
-                    <p className="text-sm font-semibold text-white">
+                  <div className="bg-current/5 rounded-lg p-3">
+                    <p className="text-xs opacity-60 mb-1">24h Volume</p>
+                    <p className="text-sm font-semibold">
                       {formatLargeNumber(priceData.volume24h)}
                     </p>
                   </div>

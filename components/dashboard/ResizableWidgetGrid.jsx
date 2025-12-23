@@ -6,11 +6,13 @@ import Card from '@/components/cards/Card';
 import 'react-grid-layout/css/styles.css';
 
 // Import all widget components
-import { PriceTracker } from '@/components/widgets';
+import { PriceTracker, PriceChart, FearGreedIndex } from '@/components/widgets';
 
 // Widget type mapping
 const WIDGET_COMPONENTS = {
   'price-tracker': PriceTracker,
+  'price-chart': PriceChart,
+  'fear-greed-index': FearGreedIndex,
 };
 
 /**
@@ -133,7 +135,7 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange }) => {
           const WidgetComponent = WIDGET_COMPONENTS[widget.type];
           
           return (
-            <div key={widget.id}>
+          <div key={widget.id}>
               {WidgetComponent ? (
                 <WidgetComponent
                   config={{
@@ -154,27 +156,27 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange }) => {
                 />
               ) : (
                 // Fallback for unknown widget types
-                <Card
-                  title={widget.title}
-                  description={widget.description}
-                  variant={widget.variant}
-                  className="h-full"
-                  draggable={true}
+            <Card
+              title={widget.title}
+              description={widget.description}
+              variant={widget.variant}
+              className="h-full"
+              draggable={true}
                   showTitle={widget.showTitle !== false}
                   showSubtitle={widget.showSubtitle !== false}
-                  isFixed={widget.isFixed || false}
-                  onToggleTitle={() => handleToggleTitle(widget.id)}
-                  onToggleSubtitle={() => handleToggleSubtitle(widget.id)}
-                  onToggleFixed={() => handleToggleFixed(widget.id)}
-                  onDelete={() => handleDeleteWidget(widget.id)}
-                  onChangeVariant={(newVariant) => handleChangeVariant(widget.id, newVariant)}
-                >
-                  <div className="flex items-center justify-center h-full text-4xl">
+              isFixed={widget.isFixed || false}
+              onToggleTitle={() => handleToggleTitle(widget.id)}
+              onToggleSubtitle={() => handleToggleSubtitle(widget.id)}
+              onToggleFixed={() => handleToggleFixed(widget.id)}
+              onDelete={() => handleDeleteWidget(widget.id)}
+              onChangeVariant={(newVariant) => handleChangeVariant(widget.id, newVariant)}
+            >
+              <div className="flex items-center justify-center h-full text-4xl">
                     {widget.icon || '❓'}
-                  </div>
-                </Card>
+              </div>
+            </Card>
               )}
-            </div>
+          </div>
           );
         })}
       </GridLayout>

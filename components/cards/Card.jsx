@@ -91,22 +91,31 @@ const Card = ({
     const themeOptions = [
         { name: 'default', class: 'bg-white/10 backdrop-blur-md' },
         { name: 'primary', class: 'bg-primary' },
-        { name: 'accent', class: 'bg-accent' },
+        { name: 'white', class: 'bg-white' },
         { name: 'outline', class: 'bg-white/5 backdrop-blur-md border-2 border-white/10' },
     ];
 
     const variantClasses = {
         default: 'bg-white/10 backdrop-blur-md',
         primary: 'bg-primary',
-        accent: 'bg-accent',
+        white: 'bg-white',
         highlight: 'bg-highlight',
         outline: 'bg-white/5 backdrop-blur-md border-2 border-white/10',
     };
 
+    // Text color variants - black text for light backgrounds
+    const textColorClasses = {
+        default: 'text-white',
+        primary: 'text-white',
+        white: 'text-black',
+        highlight: 'text-white',
+        outline: 'text-white',
+    };
+
     return (
-        <div className={`rounded-3xl p-6 relative overflow-hidden ${variantClasses[variant]} ${className}`}>
+        <div className={`rounded-3xl p-6 relative overflow-hidden ${variantClasses[variant]} ${textColorClasses[variant]} ${className}`}>
             {draggable && !isFixed && (
-                <div className="drag-handle absolute top-0 left-0 right-0 flex justify-center items-center py-2 text-white/50 hover:text-white/80 transition-colors z-10">
+                <div className={`drag-handle absolute top-0 left-0 right-0 flex justify-center items-center py-2 transition-colors z-10 ${variant === 'white' ? 'text-black/50 hover:text-black/80' : 'text-white/50 hover:text-white/80'}`}>
                     <HugeiconsIcon icon={DragDropHorizontalIcon} className="w-5 h-5" />
                 </div>
             )}
@@ -119,17 +128,17 @@ const Card = ({
                 {title && description && (
                     <div className="flex w-full justify-between items-start">
                         <div className="flex flex-col gap-1 ">
-                            {showTitle && <h3 className="text-lg font-semibold text-white">{title}</h3>}
-                            {showSubtitle && <p className="text-sm text-white/80">{description}</p>}
+                            {showTitle && <h3 className="text-lg font-semibold">{title}</h3>}
+                            {showSubtitle && <p className={`text-sm ${variant === 'white' ? 'text-black/80' : 'text-white/80'}`}>{description}</p>}
                         </div>
                         <div className="flex items-center gap-2">
                             {isFixed && (
-                                <div className="text-white/50">
+                                <div className={variant === 'white' ? 'text-black/50' : 'text-white/50'}>
                                     <HugeiconsIcon icon={PinIcon} className="w-4 h-4" />
                                 </div>
                             )}
                             <button
-                                className="cursor-pointer transition-colors text-white/50 hover:text-white/80 p-2 rounded-full hover:bg-white/5 relative z-30"
+                                className={`cursor-pointer transition-colors p-2 rounded-full relative z-30 ${variant === 'white' ? 'text-black/50 hover:text-black/80 hover:bg-black/5' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
                                 type="button"
                                 onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                             >
@@ -141,7 +150,7 @@ const Card = ({
                         </div>
                     </div>
                 )}
-            </div>
+             </div>
 
             <div className={`transition-all duration-300 ${isSettingsOpen ? 'opacity-50 blur-[2px]' : ''}`}>
                 {children}
