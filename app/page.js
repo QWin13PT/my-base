@@ -90,37 +90,8 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          // Connected state
+ 
           <div className="space-y-6">
-
-            {/* User Status */}
-            <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
-              <h3 className="mb-3 text-lg font-semibold text-gray-900">
-                Connection Status
-              </h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-gray-700">Wallet:</span>
-                  <span className="text-green-600">✓ Connected</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-gray-700">Database:</span>
-                  <span className={isAuthenticated ? 'text-green-600' : 'text-yellow-600'}>
-                    {isAuthenticated ? '✓ Synced' : '⚠ Using localStorage'}
-                  </span>
-                </div>
-                {user && (
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-gray-700">User ID:</span>
-                    <span className="text-gray-600 font-mono text-xs">
-                      {user.id}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-          
 
             {/* Widget Grid */}
             {widgetsLoading ? (

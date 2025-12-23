@@ -5,6 +5,14 @@ import GridLayout from 'react-grid-layout';
 import Card from '@/components/cards/Card';
 import 'react-grid-layout/css/styles.css';
 
+// Import all widget components
+import { PriceTracker } from '@/components/widgets';
+
+// Widget type mapping
+const WIDGET_COMPONENTS = {
+  'price-tracker': PriceTracker,
+};
+
 /**
  * ResizableWidgetGrid - Simple draggable and resizable grid
  * Responsive to parent container width using custom hook
@@ -94,6 +102,15 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange }) => {
     onWidgetsChange?.(updatedWidgets);
   };
 
+  const handleChangeVariant = (widgetId, newVariant) => {
+    const updatedWidgets = widgets.map((widget) =>
+      widget.id === widgetId
+        ? { ...widget, variant: newVariant }
+        : widget
+    );
+    onWidgetsChange?.(updatedWidgets);
+  };
+
   return (
     <div ref={containerRef} className="w-full">
       <GridLayout
@@ -111,28 +128,55 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange }) => {
         isResizable={true}
         resizeHandles={['se', 'sw', 'ne', 'nw']}
       >
-        {widgets.map((widget) => (
-          <div key={widget.id}>
-            <Card
-              title={widget.title}
-              description={widget.description}
-              variant={widget.variant}
-              className="h-full"
-              draggable={true}
-              showTitle={widget.showTitle !== false} // Default to true
-              showSubtitle={widget.showSubtitle !== false} // Default to true
-              isFixed={widget.isFixed || false}
-              onToggleTitle={() => handleToggleTitle(widget.id)}
-              onToggleSubtitle={() => handleToggleSubtitle(widget.id)}
-              onToggleFixed={() => handleToggleFixed(widget.id)}
-              onDelete={() => handleDeleteWidget(widget.id)}
-            >
-              <div className="flex items-center justify-center h-full text-4xl">
-                {widget.icon}
-              </div>
-            </Card>
-          </div>
-        ))}
+        {widgets.map((widget) => {
+          // Get the widget component for this widget type
+          const WidgetComponent = WIDGET_COMPONENTS[widget.type];
+          
+          return (
+            <div key={widget.id}>
+              {WidgetComponent ? (
+                <WidgetComponent
+                  config={{
+                    ...widget,
+                    showTitle: widget.showTitle !== false,
+                    showSubtitle: widget.showSubtitle !== false,
+                    variant: widget.variant,
+                    isFixed: widget.isFixed || false,
+                    tokenId: widget.tokenId,
+                  }}
+                  onUpdateConfig={(newConfig) => {
+                    const updatedWidgets = widgets.map((w) =>
+                      w.id === widget.id ? { ...w, ...newConfig } : w
+                    );
+                    onWidgetsChange?.(updatedWidgets);
+                  }}
+                  onDelete={() => handleDeleteWidget(widget.id)}
+                />
+              ) : (
+                // Fallback for unknown widget types
+                <Card
+                  title={widget.title}
+                  description={widget.description}
+                  variant={widget.variant}
+                  className="h-full"
+                  draggable={true}
+                  showTitle={widget.showTitle !== false}
+                  showSubtitle={widget.showSubtitle !== false}
+                  isFixed={widget.isFixed || false}
+                  onToggleTitle={() => handleToggleTitle(widget.id)}
+                  onToggleSubtitle={() => handleToggleSubtitle(widget.id)}
+                  onToggleFixed={() => handleToggleFixed(widget.id)}
+                  onDelete={() => handleDeleteWidget(widget.id)}
+                  onChangeVariant={(newVariant) => handleChangeVariant(widget.id, newVariant)}
+                >
+                  <div className="flex items-center justify-center h-full text-4xl">
+                    {widget.icon || '❓'}
+                  </div>
+                </Card>
+              )}
+            </div>
+          );
+        })}
       </GridLayout>
 
       <style jsx global>{`

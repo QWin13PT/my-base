@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from "react";
 import { appConfig } from "@/lib/config";
 import { ConnectWallet } from "./ConnectWallet";
+import WidgetsModal from "./WidgetsModal";
 import { useWallet } from "@/lib/hooks/useWallet";
 import { useUser } from "@/lib/hooks/useUser";
 import { useWidgets } from "@/lib/hooks/useWidgets";
@@ -21,16 +23,21 @@ const Header = () => {
   const { user } = useUser();
   const { address, isConnected } = useAccount();
   const { widgets, addWidget } = useWidgets(user?.id);
+  const [isWidgetsModalOpen, setIsWidgetsModalOpen] = useState(false);
 
-  const handleAddWidget = () => {
-    // Add a new widget
-    const newWidget = {
-      title: `New Widget ${widgets.length + 1}`,
-      description: 'Customize me!',
-      icon: '✨',
-      type: 'custom',
-    };
-    addWidget(newWidget);
+  const handleOpenWidgetsModal = () => {
+    setIsWidgetsModalOpen(true);
+  };
+
+  const handleCloseWidgetsModal = () => {
+    setIsWidgetsModalOpen(false);
+  };
+
+  const handleAddWidget = (widget) => {
+    // Add the selected widget to the dashboard
+    addWidget(widget);
+    // Optionally close modal after adding (or keep it open for multiple additions)
+    // setIsWidgetsModalOpen(false);
   };
 
   const handleLogout = () => {
@@ -84,7 +91,7 @@ const Header = () => {
               variant="primary"
               size="sm"
               className="h-[44px] w-[44px]"
-              onClick={handleAddWidget}
+              onClick={handleOpenWidgetsModal}
             >
               <HugeiconsIcon icon={Add01Icon} className="w-5 h-5" />
             </Button>
@@ -112,6 +119,13 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      {/* Widgets Modal */}
+      <WidgetsModal
+        isOpen={isWidgetsModalOpen}
+        onClose={handleCloseWidgetsModal}
+        onAddWidget={handleAddWidget}
+      />
     </header>
   );
 };

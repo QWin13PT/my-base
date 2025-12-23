@@ -1,0 +1,146 @@
+'use client';
+
+import Modal from '@/components/ui/Modal';
+
+// Available widgets organized by category
+const WIDGET_CATEGORIES = [
+  {
+    id: 'market',
+    title: 'Market Data & Tokens',
+    widgets: [
+      {
+        id: 'price-tracker',
+        type: 'price-tracker',
+        title: 'Price Tracker',
+        description: 'Track real-time prices for popular Base tokens',
+        defaultSize: { w: 2, h: 3 },
+      },
+      {
+        id: 'trending-tokens',
+        type: 'trending-tokens',
+        title: 'Trending Tokens',
+        description: 'See what tokens are trending on Base',
+        defaultSize: { w: 2, h: 2 },
+      },
+      {
+        id: 'token-richlist',
+        type: 'token-richlist',
+        title: 'Token Richlist',
+        description: 'Discover the richlist of a specific token, showing top token holders',
+        defaultSize: { w: 2, h: 3 },
+      },
+    ],
+  },
+  {
+    id: 'portfolio',
+    title: 'Portfolio & Wallet',
+    widgets: [
+      {
+        id: 'portfolio',
+        type: 'portfolio',
+        title: 'Portfolio Overview',
+        description: 'Track your crypto portfolio with a donut chart and table view',
+        defaultSize: { w: 2, h: 3 },
+      },
+      {
+        id: 'wallet-activity',
+        type: 'wallet-activity',
+        title: 'Wallet Activity',
+        description: 'Monitor recent transactions and wallet activity',
+        defaultSize: { w: 2, h: 2 },
+      },
+    ],
+  },
+  {
+    id: 'network',
+    title: 'Network Statistics',
+    widgets: [
+      {
+        id: 'network-stats',
+        type: 'network-stats',
+        title: 'Network Stats',
+        description: 'View Base TVL, protocols, and network activity',
+        defaultSize: { w: 2, h: 3 },
+      },
+      {
+        id: 'gas-tracker',
+        type: 'gas-tracker',
+        title: 'Gas Tracker',
+        description: 'Monitor current gas prices on Base network',
+        defaultSize: { w: 1, h: 2 },
+      },
+    ],
+  },
+  {
+    id: 'defi',
+    title: 'DeFi Protocols',
+    widgets: [
+      {
+        id: 'top-protocols',
+        type: 'top-protocols',
+        title: 'Top Protocols',
+        description: 'Leading DeFi protocols on Base by TVL',
+        defaultSize: { w: 2, h: 2 },
+      },
+      {
+        id: 'quick-swap',
+        type: 'quick-swap',
+        title: 'Quick Swap',
+        description: 'Swap tokens directly from your dashboard',
+        defaultSize: { w: 2, h: 3 },
+      },
+    ],
+  },
+];
+
+const WidgetsModal = ({ isOpen, onClose, onAddWidget }) => {
+  const handleWidgetClick = (widget) => {
+    if (onAddWidget) {
+      onAddWidget(widget);
+    }
+    // Optionally close modal after adding
+    // onClose();
+  };
+
+  return (
+    <Modal
+      title={<span className="text-white">Add a Widget</span>}
+      description={<span className="text-gray-400">Customize your dashboard by adding widgets that provide specific functionalities and data.</span>}
+      showModal={isOpen}
+      closeModal={onClose}
+      className="max-w-5xl"
+    >
+      <div className="space-y-8">
+        {WIDGET_CATEGORIES.map((category) => (
+          <div key={category.id}>
+            {/* Category Title */}
+            <h3 className="text-base font-medium text-gray-400 mb-4">
+              {category.title}
+            </h3>
+
+            {/* Widgets Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {category.widgets.map((widget) => (
+                <div
+                  key={widget.id}
+                  onClick={() => handleWidgetClick(widget)}
+                  className="bg-gray-800 border border-gray-700 rounded-lg p-5 hover:border-blue-500 hover:bg-gray-750 transition-all cursor-pointer group"
+                >
+                  <h4 className="text-white font-semibold text-base mb-2 group-hover:text-blue-400 transition-colors">
+                    {widget.title}
+                  </h4>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    {widget.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </Modal>
+  );
+};
+
+export default WidgetsModal;
+

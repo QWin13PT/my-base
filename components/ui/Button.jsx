@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 const Button = ({ children, onClick, className = '', variant = 'default', size = 'md', disabled = false, icon = null, iconPosition = 'right', loading = false }) => {
     const variantClasses = {

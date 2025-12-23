@@ -58,3 +58,4 @@ info.md
 architecture.md
 *.md
 .npmrc
+/scripts
