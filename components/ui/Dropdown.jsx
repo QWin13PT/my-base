@@ -33,7 +33,11 @@ export default function Dropdown({ trigger, items, children, className = '' }) {
                     opacity: isOpen ? 1 : 0,
                     y: isOpen ? 0 : -10 
                 }}
-                transition={{ duration: 0.2 }}
+                transition={{
+                    type: "spring",
+                    visualDuration: 0.2,
+                    bounce: 0.2,
+                }}
                 style={{ pointerEvents: isOpen ? "auto" : "none" }}
                 className={`absolute right-0 mt-2 w-64 rounded-3xl shadow-lg bg-dark border border-white/10 z-50 overflow-hidden ${className}`}
             >

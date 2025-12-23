@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google";
 import { WalletProvider } from "@/components/providers/WalletProvider";
 import { appConfig } from "@/lib/config";
-import Header from "@/components/shared/Header";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,7 +20,6 @@ export default function RootLayout({ children }) {
         className={`${inter.variable} antialiased bg-dark text-white min-h-screen`}
       >
         <WalletProvider>
-          <Header />
           {children}
         </WalletProvider>
       </body>

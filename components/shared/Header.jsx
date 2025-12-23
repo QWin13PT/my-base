@@ -4,25 +4,33 @@ import { useState } from "react";
 import { appConfig } from "@/lib/config";
 import { ConnectWallet } from "./ConnectWallet";
 import WidgetsModal from "./WidgetsModal";
+import LayoutDropdown from "./LayoutDropdown";
 import { useWallet } from "@/lib/hooks/useWallet";
 import { useUser } from "@/lib/hooks/useUser";
-import { useWidgets } from "@/lib/hooks/useWidgets";
 import { useAccount } from "wagmi";
 import Avatar from "@/components/ui/Avatar";
 import SearchBar from "@/components/form/SearchBar";
 import Button from "@/components/ui/Button";
 import Dropdown from "@/components/ui/Dropdown";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Add01Icon, ArrowDown01Icon } from "@hugeicons-pro/core-solid-standard";
+import { Add01Icon } from "@hugeicons-pro/core-solid-standard";
 import { Outfit } from "next/font/google";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
-const Header = () => {
+const Header = ({ 
+  layouts = [], 
+  activeLayoutId, 
+  onSwitchLayout, 
+  onCreateLayout,
+  onRenameLayout,
+  onDeleteLayout,
+  onDuplicateLayout,
+  onAddWidget 
+}) => {
   const { activeNetwork, disconnect, formatAddress } = useWallet();
   const { user } = useUser();
   const { address, isConnected } = useAccount();
-  const { widgets, addWidget } = useWidgets(user?.id);
   const [isWidgetsModalOpen, setIsWidgetsModalOpen] = useState(false);
 
   const handleOpenWidgetsModal = () => {
@@ -34,8 +42,10 @@ const Header = () => {
   };
 
   const handleAddWidget = (widget) => {
-    // Add the selected widget to the dashboard
-    addWidget(widget);
+    // Call parent handler to add widget to active layout
+    if (onAddWidget) {
+      onAddWidget(widget);
+    }
     // Optionally close modal after adding (or keep it open for multiple additions)
     // setIsWidgetsModalOpen(false);
   };
@@ -79,11 +89,18 @@ const Header = () => {
           </div>
           {/* Search bar and add button */}
           <div className="flex items-center gap-4">
-            <div>
-              <Button variant="transparent" className="text-xl" icon={<HugeiconsIcon icon={ArrowDown01Icon} className="w-5 h-5" />}>
-                Dashboard
-              </Button>
-            </div>
+            {/* Layout Dropdown */}
+            {isConnected && (
+              <LayoutDropdown
+                layouts={layouts}
+                activeLayoutId={activeLayoutId}
+                onSwitchLayout={onSwitchLayout}
+                onCreateLayout={onCreateLayout}
+                onRenameLayout={onRenameLayout}
+                onDeleteLayout={onDeleteLayout}
+                onDuplicateLayout={onDuplicateLayout}
+              />
+            )}
             <div className="flex-1 w-80">
               <SearchBar placeholder="Search" />
             </div>

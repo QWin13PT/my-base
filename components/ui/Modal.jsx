@@ -61,7 +61,7 @@ const Modal = ({ title, description, children, showModal, closeModal, className,
         >
 
           <motion.div
-            className={`absolute m-0 max-h-[90vh] md:relative w-full max-w-3xl bg-[#1A1A1A] rounded-6xl shadow-lg text-secondary flex flex-col overflow-hidden z-50 p-6 ${className || ''}`}
+            className={`absolute m-0 max-h-[90vh] md:relative w-full max-w-3xl bg-[#1A1A1A] rounded-3xl shadow-lg text-secondary flex flex-col overflow-hidden z-50 p-6 ${className || ''}`}
             onClick={(e) => e.stopPropagation()}
             variants={modalVariants}
             initial="hidden"
@@ -82,7 +82,7 @@ const Modal = ({ title, description, children, showModal, closeModal, className,
             <div className="p-4 pt-8 md:p-8 overflow-y-auto flex-1 min-h-0">
               {(title || description) && (
                 <div className="pb-4 md:pb-8">
-                  {title && <h2 className="text-2xl font-semibold mb-2"> {title} </h2>}
+                  {title && <h2 className="text-xl font-semibold mb-2"> {title} </h2>}
                   {description && <span className="text-base opacity-50 ">{description}</span>}
                 </div>
               )}

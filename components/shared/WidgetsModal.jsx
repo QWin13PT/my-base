@@ -124,11 +124,11 @@ const WidgetsModal = ({ isOpen, onClose, onAddWidget }) => {
       closeModal={onClose}
       className="max-w-5xl"
     >
-      <div className="space-y-8">
+      <div className="space-y-8 pt-4">
         {WIDGET_CATEGORIES.map((category) => (
           <div key={category.id}>
             {/* Category Title */}
-            <h3 className="text-base font-medium text-gray-400 mb-4">
+            <h3 className="text-base font-medium text-white/80 uppercase mb-4">
               {category.title}
             </h3>
 
@@ -138,7 +138,7 @@ const WidgetsModal = ({ isOpen, onClose, onAddWidget }) => {
                 <div
                   key={widget.id}
                   onClick={() => handleWidgetClick(widget)}
-                  className="bg-gray-800 border border-gray-700 rounded-lg p-5 hover:border-blue-500 hover:bg-gray-750 transition-all cursor-pointer group"
+                  className="border-2 border-white/10 rounded-2xl p-4 hover:bg-white/10 transition-all cursor-pointer group"
                 >
                   <h4 className="text-white font-semibold text-base mb-2 group-hover:text-blue-400 transition-colors">
                     {widget.title}
