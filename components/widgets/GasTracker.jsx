@@ -20,6 +20,7 @@ import { motion } from 'motion/react';
 import { Spinner } from "@heroui/spinner";
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Activity02Icon } from '@hugeicons-pro/core-solid-standard';
+import { useCurrency } from '@/lib/contexts/CurrencyContext';
 
 export default function GasTracker({
   config = {},
@@ -32,6 +33,9 @@ export default function GasTracker({
   const [variant, setVariant] = useState(config.variant || 'default');
   const [isFixed, setIsFixed] = useState(config.isFixed || false);
   const [showChart, setShowChart] = useState(config.showChart ?? true);
+
+  // Use currency context
+  const { currency, formatPrice: formatCurrencyPrice } = useCurrency();
 
   // Gas data state
   const [gasData, setGasData] = useState(null);
@@ -162,8 +166,10 @@ export default function GasTracker({
 
   // Format USD amount
   const formatUSD = (amount) => {
-    if (amount < 0.01) return `$${amount.toFixed(4)}`;
-    return `$${amount.toFixed(2)}`;
+    if (amount < 0.01) {
+      return formatCurrencyPrice(amount, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    }
+    return formatCurrencyPrice(amount, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   // Handle config updates

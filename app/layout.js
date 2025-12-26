@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import { WalletProvider } from "@/components/providers/WalletProvider";
+import { CurrencyProvider } from "@/lib/contexts/CurrencyContext";
 import { appConfig } from "@/lib/config";
 import Script from "next/script";
 import "./globals.css";
@@ -46,7 +47,9 @@ export default function RootLayout({ children }) {
         suppressHydrationWarning
       >
         <WalletProvider>
-          {children}
+          <CurrencyProvider>
+            {children}
+          </CurrencyProvider>
         </WalletProvider>
       </body>
     </html>

@@ -5,6 +5,7 @@ import Card from '@/components/cards/Card';
 import { supabase } from '@/lib/supabase';
 import { getTokenPrice } from '@/lib/api/coingecko';
 import CardSettingsToggle from '@/components/cards/CardSettingsToggle';
+import { useCurrency } from '@/lib/contexts/CurrencyContext';
 
 export default function PriceTracker({ 
   config = {}, 
@@ -17,6 +18,9 @@ export default function PriceTracker({
   const [showStats, setShowStats] = useState(config.showStats ?? true);
   const [variant, setVariant] = useState(config.variant || 'default');
   const [isFixed, setIsFixed] = useState(config.isFixed || false);
+  
+  // Use currency context
+  const { currency, formatPrice: formatCurrencyPrice } = useCurrency();
   
   // Token selection state
   const [selectedToken, setSelectedToken] = useState(config.tokenId ? null : null);
@@ -192,19 +196,33 @@ export default function PriceTracker({
 
   // Format price
   const formatPrice = (price) => {
-    if (!price) return '$0.00';
-    if (price < 0.01) return `$${price.toFixed(6)}`;
-    if (price < 1) return `$${price.toFixed(4)}`;
-    return `$${price.toFixed(2)}`;
+    if (!price) return `${currency.symbol}0.00`;
+    
+    // Use currency context formatting
+    if (price < 0.01) {
+      return formatCurrencyPrice(price, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+    }
+    if (price < 1) {
+      return formatCurrencyPrice(price, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    }
+    return formatCurrencyPrice(price, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   // Format large numbers
   const formatLargeNumber = (num) => {
-    if (!num) return '$0';
-    if (num >= 1e9) return `$${(num / 1e9).toFixed(2)}B`;
-    if (num >= 1e6) return `$${(num / 1e6).toFixed(2)}M`;
-    if (num >= 1e3) return `$${(num / 1e3).toFixed(2)}K`;
-    return `$${num.toFixed(2)}`;
+    if (!num) return `${currency.symbol}0`;
+    
+    // Use currency context formatting with abbreviations
+    if (num >= 1e9) {
+      return `${currency.symbol}${(num / 1e9).toFixed(2)}B`;
+    }
+    if (num >= 1e6) {
+      return `${currency.symbol}${(num / 1e6).toFixed(2)}M`;
+    }
+    if (num >= 1e3) {
+      return `${currency.symbol}${(num / 1e3).toFixed(2)}K`;
+    }
+    return formatCurrencyPrice(num, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   // Custom settings for the card menu

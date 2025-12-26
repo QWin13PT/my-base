@@ -22,6 +22,7 @@ import { Spinner } from "@heroui/spinner";
 import CardSettingsToggle from '@/components/cards/CardSettingsToggle';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { WaterfallUp01Icon, ChartAverageIcon } from '@hugeicons-pro/core-solid-standard';
+import { useCurrency } from '@/lib/contexts/CurrencyContext';
 
 export function PriceChart({
   config = {},
@@ -36,6 +37,9 @@ export function PriceChart({
   const [chartColor, setChartColor] = useState(config.chartColor || 'primary');
   const [chartType, setChartType] = useState(config.chartType || 'line');
   const [showPriceInfo, setShowPriceInfo] = useState(config.showPriceInfo ?? true);
+
+  // Use currency context
+  const { currency, formatPrice: formatCurrencyPrice } = useCurrency();
 
   // Token selection state
   const [selectedToken, setSelectedToken] = useState(null);
@@ -225,10 +229,16 @@ export function PriceChart({
 
   // Format price for display
   const formatPrice = (price) => {
-    if (!price) return '$0.00';
-    if (price < 0.01) return `$${price.toFixed(6)}`;
-    if (price < 1) return `$${price.toFixed(4)}`;
-    return `$${price.toFixed(2)}`;
+    if (!price) return `${currency.symbol}0.00`;
+    
+    // Use currency context formatting
+    if (price < 0.01) {
+      return formatCurrencyPrice(price, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+    }
+    if (price < 1) {
+      return formatCurrencyPrice(price, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    }
+    return formatCurrencyPrice(price, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   // Format date for tooltip
@@ -526,7 +536,7 @@ export function PriceChart({
   return (
     <Card
       title={selectedToken ? `Price Chart - ${selectedToken.name}` : 'Price Chart - Loading...'}
-      description={selectedToken ? `${selectedToken.symbol} / USD` : 'Token price chart - Loading...'}
+      description={selectedToken ? `${selectedToken.symbol} / ${currency.code}` : 'Token price chart - Loading...'}
       image={selectedToken ? selectedToken.logo_url : null}
       showTitle={showTitle}
       showSubtitle={showSubtitle}

@@ -206,7 +206,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Profile Form Card */}
-        <div className="bg-gray-900 border border-white/10 rounded-xl p-8">
+        <div className="bg-white/10 border border-white/10 rounded-3xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Avatar Section */}
             <div className="pb-6 border-b border-white/10">
@@ -274,7 +274,7 @@ export default function ProfilePage() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter your username"
                 maxLength={30}
-                className="w-full px-4 py-3 bg-gray-800 text-white border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                className="w-full px-4 py-3 bg-white/10 text-white border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
               />
               <p className="text-xs text-white/50 mt-1">
                 {username.length}/30 characters
@@ -293,7 +293,7 @@ export default function ProfilePage() {
                 placeholder="Tell us about yourself..."
                 maxLength={160}
                 rows={4}
-                className="w-full px-4 py-3 bg-gray-800 text-white border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none"
+                className="w-full px-4 py-3 bg-white/10 text-white border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none"
               />
               <p className="text-xs text-white/50 mt-1">
                 {bio.length}/160 characters
@@ -311,7 +311,7 @@ export default function ProfilePage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="w-full px-4 py-3 bg-gray-800 text-white border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                className="w-full px-4 py-3 bg-white/10 text-white border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
               />
               <p className="text-xs text-white/50 mt-1">
                 We'll never share your email with anyone else
@@ -323,7 +323,7 @@ export default function ProfilePage() {
               <label className="block text-sm font-semibold text-white mb-2">
                 Wallet Address
               </label>
-              <div className="w-full px-4 py-3 bg-gray-800/50 text-white/70 border border-white/10 rounded-lg font-mono text-sm">
+              <div className="w-full px-4 py-3 bg-white/10 text-white/70 border border-white/10 rounded-lg font-mono text-sm">
                 {formatAddress(address)}
               </div>
               <p className="text-xs text-white/50 mt-1">
@@ -333,14 +333,14 @@ export default function ProfilePage() {
 
             {/* Error Message */}
             {error && (
-              <div className="p-4 bg-red-900/20 border border-red-800 rounded-lg">
+              <div className="p-4 bg-red-900/20 border border-red-800 rounded-3xl">
                 <p className="text-red-400 text-sm">❌ {error}</p>
               </div>
             )}
 
             {/* Success Message */}
             {success && (
-              <div className="p-4 bg-green-900/20 border border-green-800 rounded-lg">
+              <div className="p-4 bg-green-900/20 border border-green-800 rounded-3xl">
                 <p className="text-green-400 text-sm">✓ {success}</p>
               </div>
             )}
@@ -349,7 +349,7 @@ export default function ProfilePage() {
             <div className="flex gap-3 pt-4 border-t border-white/10">
               <Button
                 type="button"
-                variant="secondary"
+                variant="outline"
                 onClick={() => router.push('/')}
                 disabled={isSaving}
               >

@@ -15,8 +15,9 @@ import SearchBar from "@/components/form/SearchBar";
 import Button from "@/components/ui/Button";
 import Dropdown from "@/components/ui/Dropdown";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Add01Icon } from "@hugeicons-pro/core-solid-standard";
+import { Add01Icon, Settings01Icon } from "@hugeicons-pro/core-solid-standard";
 import { Outfit } from "next/font/google";
+import { useCurrency } from "@/lib/contexts/CurrencyContext";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -33,6 +34,7 @@ const Header = ({
   const { activeNetwork, disconnect, formatAddress } = useWallet();
   const { user } = useUser();
   const { address, isConnected } = useAccount();
+  const { currency, currencies, changeCurrency } = useCurrency();
   const [isWidgetsModalOpen, setIsWidgetsModalOpen] = useState(false);
 
   const handleOpenWidgetsModal = () => {
@@ -83,6 +85,43 @@ const Header = ({
     },
   ];
 
+  // Settings dropdown items
+  const settingsMenuItems = [
+    {
+      label: (
+        <div className="flex flex-col gap-1 py-1">
+          <span className="font-semibold text-base text-black">
+            Settings
+          </span>
+        </div>
+      ),
+      onClick: () => { }, // Header display
+    },
+    {
+      label: (
+        <div className="flex flex-col gap-1">
+          <span className="text-sm font-medium text-black">Currency</span>
+          <span className="text-xs text-black/50">
+            Current: {currency.name} ({currency.symbol})
+          </span>
+        </div>
+      ),
+      onClick: () => { }, // Info display
+    },
+    ...currencies.map(curr => ({
+      label: (
+        <div className="flex items-center justify-between w-full">
+          <span className="text-sm">{curr.name}</span>
+          <span className="text-xs text-black/50 ml-2">{curr.symbol}</span>
+          {curr.code === currency.code && (
+            <span className="ml-2 text-xs text-primary">✓</span>
+          )}
+        </div>
+      ),
+      onClick: () => changeCurrency(curr.code),
+    })),
+  ];
+
   return (
     <header className="bg-dark border-b border-white/10">
       <div className="mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between gap-16">
@@ -124,6 +163,19 @@ const Header = ({
 
           {/* Wallet and avatar */}
           <div className="flex items-center gap-4">
+            <Dropdown
+              variant="light"
+              trigger={
+                <Button
+                  variant="transparent"
+                  size="sm"
+                  className="h-[44px] w-[44px]"
+                >
+                  <HugeiconsIcon icon={Settings01Icon} className="w-5 h-5" />
+                </Button>
+              }
+              items={settingsMenuItems}
+            />
             {/* Show avatar when connected, connect wallet button when not */}
             {isConnected && address ? (
               <Dropdown
