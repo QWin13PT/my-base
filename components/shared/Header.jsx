@@ -15,7 +15,7 @@ import SearchBar from "@/components/form/SearchBar";
 import Button from "@/components/ui/Button";
 import Dropdown from "@/components/ui/Dropdown";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Add01Icon, Settings01Icon } from "@hugeicons-pro/core-solid-standard";
+import { Add01Icon, Settings01Icon, Copy02Icon } from "@hugeicons-pro/core-solid-standard";
 import { Outfit } from "next/font/google";
 import { useCurrency } from "@/lib/contexts/CurrencyContext";
 
@@ -62,13 +62,26 @@ const Header = ({
   const avatarMenuItems = [
     {
       label: (
-        <div className="flex flex-col gap-1 py-1">
+        <div className="flex flex-col gap-1 py-1 min-w-0">
           <span className="font-semibold text-base text-black">
             {user?.username || 'User'}
           </span>
-          <span className="text-xs text-black/50">
+               
+          <Button
+            variant="transparent"
+            size="sm"
+            rounded="lg"
+            onClick={() => {
+              navigator.clipboard.writeText(address);
+            }}
+            icon={<HugeiconsIcon icon={Copy02Icon} className="w-5 h-5 text-black/50"  />}
+            iconPosition="right"
+            className="w-full !justify-between items-center !text-left !bg-black/5 hover:bg-black/10"
+          >
+            <span className="text-xs text-black/50 font-mono " >
             {formatAddress(address)}
           </span>
+          </Button>
         </div>
       ),
       onClick: () => { }, // Info display, no action
@@ -90,7 +103,7 @@ const Header = ({
     {
       label: (
         <div className="flex flex-col gap-1 py-1">
-          <span className="font-semibold text-base text-black">
+          <span className="text-xs text-black/50 font-semibold uppercase">
             Settings
           </span>
         </div>
