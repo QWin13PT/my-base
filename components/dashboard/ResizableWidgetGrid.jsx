@@ -22,12 +22,16 @@ const WIDGET_COMPONENTS = {
 const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange }) => {
   const containerRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(1200);
+  const [gridMargin, setGridMargin] = useState(32); // gap-8 (32px) default
 
-  // Measure container width on mount and resize
+  // Measure container width and calculate responsive margin on mount and resize
   useEffect(() => {
     const updateWidth = () => {
       if (containerRef.current) {
         setContainerWidth(containerRef.current.offsetWidth);
+        // gap-4 (16px) on mobile (< 640px), gap-8 (32px) on desktop (>= 640px)
+        const isMobile = window.innerWidth < 640;
+        setGridMargin(isMobile ? 16 : 32);
       }
     };
 
@@ -45,7 +49,7 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange }) => {
       w: widget.w ?? 3,
       h: widget.h ?? 2,
       minW: 2,
-      minH: 2,
+      minH: 1,
       maxW: 12,
       maxH: 6,
       static: widget.isFixed ?? false, // Add static property for fixed cards
@@ -119,13 +123,13 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange }) => {
         className="layout"
         layout={layout}
         cols={12}
-        rowHeight={80}
+        rowHeight={240}
         width={containerWidth}
         onLayoutChange={handleLayoutChange}
         draggableHandle=".drag-handle"
         compactType="vertical"
         preventCollision={false}
-        margin={[16, 16]}
+        margin={[gridMargin, gridMargin]}
         isDraggable={true}
         isResizable={true}
         resizeHandles={['se', 'sw', 'ne', 'nw']}

@@ -518,8 +518,8 @@ export function PriceChart({
 
   return (
     <Card
-      title={selectedToken ? `Price Chart ${selectedToken.name}` : 'Price Chart'}
-      description={selectedToken ? `${selectedToken.symbol} / USD` : 'Token price chart'}
+      title={selectedToken ? `Price Chart - ${selectedToken.name}` : 'Price Chart - Loading...'}
+      description={selectedToken ? `${selectedToken.symbol} / USD` : 'Token price chart - Loading...'}
       image={selectedToken ? selectedToken.logo_url : null}
       showTitle={showTitle}
       showSubtitle={showSubtitle}
@@ -580,7 +580,7 @@ export function PriceChart({
 
             {/* Chart */}
             <div className="w-full">
-              <ResponsiveContainer width="100%" aspect={2} debounce={50}>
+              <ResponsiveContainer width="100%" aspect={1.5} debounce={50}>
                 {chartType === 'line' ? (
                   <LineChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                     <defs>

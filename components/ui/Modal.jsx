@@ -52,7 +52,7 @@ const Modal = ({ title, description, children, showModal, closeModal, className,
     <AnimatePresence mode="wait">
       {showModal && (
         <motion.div
-          className={`fixed inset-0 z-50 flex items-center justify-center overflow-hidden  outline-none focus:outline-none backdrop-blur-md bg-dark/20`}
+          className={`fixed inset-0 z-50 flex items-center justify-center overflow-hidden  outline-none focus:outline-none backdrop-blur-sm bg-dark/20`}
           onClick={closeModal}
           initial="hidden"
           animate="visible"

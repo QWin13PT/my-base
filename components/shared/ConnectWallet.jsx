@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
 import { base } from 'wagmi/chains';
 import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
 
 
 export function ConnectWallet({ className }) {
@@ -53,61 +54,71 @@ export function ConnectWallet({ className }) {
 
   // Not connected
   return (
-    <div className="relative">
+    <>
       <Button 
-        onClick={() => setShowConnectors(!showConnectors)}
+        onClick={() => setShowConnectors(true)}
         disabled={isPending}
         variant="primary"
-        
       >
         {isPending ? 'Connecting...' : 'Connect Wallet'}
       </Button>
 
-      {/* Wallet selector dropdown */}
-      {showConnectors && (
-        <>
-          <div className="absolute right-0 top-full mt-2 w-64 rounded-lg bg-white shadow-lg border border-gray-200 overflow-hidden z-50">
-            <div className="p-3">
-              <div className="px-2 py-2 text-sm font-semibold text-gray-900 mb-2">
-                Connect Wallet
-              </div>
-              <div className="space-y-1">
-                {connectors.map((connector) => {
-                  const walletName = connector.name === 'Browser Wallet' 
-                    ? 'MetaMask / Trust Wallet' 
-                    : connector.name;
-                    
-                  return (
-                    <button
-                      key={connector.id}
-                      onClick={() => {
-                        connect({ 
-                          connector,
-                          chainId: base.id, // Connect to Base network
-                        });
-                        setShowConnectors(false);
-                      }}
-                      className="w-full px-3 py-3 text-left text-sm hover:bg-gray-50 rounded-lg transition-colors flex items-center gap-3 border border-gray-100"
-                    >
-                      <span className="font-medium text-gray-900">{walletName}</span>
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="mt-3 px-2 py-2 text-xs text-gray-500 border-t border-gray-100">
-                Only Base network addresses
-              </div>
-            </div>
-          </div>
-
-          {/* Click outside to close */}
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setShowConnectors(false)}
-          />
-        </>
-      )}
-    </div>
+      {/* Wallet selector modal */}
+      <Modal
+        title="Connect Wallet"
+        description="Only Base network addresses"
+        showModal={showConnectors}
+        closeModal={() => setShowConnectors(false)}
+        className="max-w-md"
+      >
+        <div className="space-y-2">
+          {/* All wallet connectors - Coinbase Wallet at bottom */}
+          {connectors
+            .filter(connector => connector.name !== 'Browser Wallet')
+            .sort((a, b) => {
+              // Move Coinbase Wallet to bottom
+              if (a.name === 'Coinbase Wallet') return 1;
+              if (b.name === 'Coinbase Wallet') return -1;
+              return 0;
+            })
+            .map((connector) => {
+              const isCoinbase = connector.name === 'Coinbase Wallet';
+              
+              // Map wallet images
+              const walletImages = {
+                'MetaMask': '/images/logos/metamask.svg',
+                'WalletConnect': '/images/logos/walletconnect.svg',
+                'Subwallet': '/images/logos/subwallet.svg',
+                'SubWallet': '/images/logos/subwallet.svg',
+                'Trust Wallet': '/images/logos/trust-wallet.svg',
+                'Coinbase Wallet': '/images/logos/coinbase-wallet.svg',
+              };
+              
+              const walletImage = walletImages[connector.name];
+              
+              return (
+                <Button
+                  key={connector.id}
+                  rounded="lg"
+                  onClick={() => {
+                    connect({ 
+                      connector,
+                      chainId: base.id, // Connect to Base network
+                    });
+                    setShowConnectors(false);
+                  }}
+                  variant="outline"
+                  className="w-full"
+                  disabled={isCoinbase}
+                  image={walletImage}
+                >
+                  <span className="font-medium text-white">{connector.name}</span>
+                </Button>
+              );
+            })}
+        </div>
+      </Modal>
+    </>
   );
 }
 
