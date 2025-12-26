@@ -48,8 +48,8 @@ export default function TrendingTokens({
     try {
       console.log('📍 Fetching trending Base tokens from DexScreener...');
       
-      // Use the token boosts/profiles endpoint to get trending tokens on Base
-      // This shows tokens that are currently being promoted/trending
+      // Fetch trending tokens across all chains from DexScreener
+      // The token-profiles endpoint returns tokens with profiles (promoted/trending)
       const response = await fetch(
         `https://api.dexscreener.com/token-profiles/latest/v1`
       );
@@ -66,16 +66,53 @@ export default function TrendingTokens({
         throw new Error('Invalid response format from DexScreener');
       }
       
-      // Filter for Base chain tokens only and fetch their pair data
+      // Filter for Base chain tokens only
       const baseTokens = data.filter(profile => 
-        profile.chainId === 'base' && profile.tokenAddress
+        profile.chainId?.toLowerCase() === 'base' && profile.tokenAddress
       );
       
       console.log('📍 Base token profiles found:', baseTokens.length);
       
+      // If no Base tokens found in profiles, fetch from orders endpoint instead
+      if (baseTokens.length === 0) {
+        console.log('📍 No Base tokens in profiles, fetching from orders endpoint...');
+        
+        // Fallback: Get top pairs from Base chain directly
+        const ordersResponse = await fetch(
+          `https://api.dexscreener.com/orders/v1/base`
+        );
+        
+        if (ordersResponse.ok) {
+          const ordersData = await ordersResponse.json();
+          console.log('📍 Orders response:', ordersData);
+          
+          // Extract unique tokens from orders
+          if (Array.isArray(ordersData)) {
+            const uniqueAddresses = new Set();
+            const tokensFromOrders = [];
+            
+            for (const order of ordersData.slice(0, limit * 2)) {
+              if (order.tokenAddress && !uniqueAddresses.has(order.tokenAddress)) {
+                uniqueAddresses.add(order.tokenAddress);
+                tokensFromOrders.push({
+                  chainId: 'base',
+                  tokenAddress: order.tokenAddress,
+                  url: order.url || `https://dexscreener.com/base/${order.tokenAddress}`
+                });
+              }
+            }
+            
+            baseTokens.push(...tokensFromOrders);
+            console.log('📍 Base tokens from orders:', tokensFromOrders.length);
+          }
+        }
+      }
+      
+      // If still no tokens, show message
       if (baseTokens.length === 0) {
         setTokens([]);
         setLoading(false);
+        setError('No trending Base tokens found at the moment. Try refreshing.');
         return;
       }
       

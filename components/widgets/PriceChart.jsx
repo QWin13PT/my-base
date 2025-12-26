@@ -585,8 +585,8 @@ export function PriceChart({
             )}
 
             {/* Chart */}
-            <div className="w-full">
-              <ResponsiveContainer width="100%" aspect={1.5} debounce={50}>
+            <div className="w-full" style={{ minHeight: '200px' }}>
+              <ResponsiveContainer width="100%" height={300} debounce={50}>
                 {chartType === 'line' ? (
                   <LineChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                     <defs>

@@ -61,15 +61,20 @@ const Header = ({
     {
       label: (
         <div className="flex flex-col gap-1 py-1">
-          <span className="font-semibold text-base text-white">
+          <span className="font-semibold text-base text-black">
             {user?.username || 'User'}
           </span>
-          <span className="text-xs text-white/50">
+          <span className="text-xs text-black/50">
             {formatAddress(address)}
           </span>
         </div>
       ),
       onClick: () => { }, // Info display, no action
+    },
+    {
+      label: 'Profile',
+      href: '/profile',
+      onClick: () => { }, // Navigation handled by href
     },
     {
       label: 'Logout',
@@ -122,7 +127,7 @@ const Header = ({
             {/* Show avatar when connected, connect wallet button when not */}
             {isConnected && address ? (
               <Dropdown
-                className="bg-white "
+                variant="light"
                 trigger={
                   <div className="cursor-pointer">
                     <Avatar

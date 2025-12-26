@@ -45,21 +45,43 @@ export function OnboardingModal({ user, onComplete }) {
     reader.readAsDataURL(file);
   };
 
-  // Upload avatar to Supabase Storage
+  // Upload avatar to Supabase Storage or convert to base64
   const uploadAvatar = async () => {
     if (!avatarFile || !user) return null;
 
     try {
+      // Check if Supabase storage is available
+      if (!supabase) {
+        console.warn('Supabase not available, using base64 encoding');
+        return convertToBase64(avatarFile);
+      }
+
+      // Try to upload to Supabase Storage
       const fileExt = avatarFile.name.split('.').pop();
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
+      const filePath = `${fileName}`; // Store directly in bucket root
 
       // Upload to Supabase Storage
       const { data, error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, avatarFile);
+        .upload(filePath, avatarFile, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Storage upload error:', uploadError);
+        
+        // Fallback to base64 if storage fails
+        if (uploadError.message?.includes('not found') || 
+            uploadError.message?.includes('does not exist') ||
+            uploadError.statusCode === '404') {
+          console.warn('Storage bucket not found, using base64 encoding');
+          return convertToBase64(avatarFile);
+        }
+        
+        throw uploadError;
+      }
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
@@ -69,8 +91,25 @@ export function OnboardingModal({ user, onComplete }) {
       return publicUrl;
     } catch (err) {
       console.error('Avatar upload error:', err);
-      throw new Error('Failed to upload avatar');
+      
+      // Fallback to base64 as last resort
+      try {
+        console.warn('Falling back to base64 encoding');
+        return await convertToBase64(avatarFile);
+      } catch (base64Err) {
+        throw new Error('Failed to process avatar image');
+      }
     }
+  };
+
+  // Convert file to base64 data URL
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   };
 
   // Handle form submission
