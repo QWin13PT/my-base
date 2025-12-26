@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import Card from '@/components/cards/Card';
 import { supabase } from '@/lib/supabase';
 import { getTokenMarketChart } from '@/lib/api/coingecko';
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  ResponsiveContainer, 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
   ReferenceLine,
   ComposedChart,
   Bar,
@@ -18,13 +18,15 @@ import {
 } from 'recharts';
 import { colors } from '@/lib/theme';
 import { motion } from 'motion/react';
-import {Spinner} from "@heroui/spinner";
-import Switch from '@/components/ui/Switch';
+import { Spinner } from "@heroui/spinner";
+import CardSettingsToggle from '@/components/cards/CardSettingsToggle';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { WaterfallUp01Icon, ChartAverageIcon } from '@hugeicons-pro/core-solid-standard';
 
-export function PriceChart({ 
+export function PriceChart({
   config = {},
   onUpdateConfig,
-  onDelete 
+  onDelete
 }) {
   const [showTitle, setShowTitle] = useState(config.showTitle ?? false);
   const [showSubtitle, setShowSubtitle] = useState(config.showSubtitle ?? false);
@@ -34,13 +36,13 @@ export function PriceChart({
   const [chartColor, setChartColor] = useState(config.chartColor || 'primary');
   const [chartType, setChartType] = useState(config.chartType || 'line');
   const [showPriceInfo, setShowPriceInfo] = useState(config.showPriceInfo ?? true);
-  
+
   // Token selection state
   const [selectedToken, setSelectedToken] = useState(null);
   const [tokens, setTokens] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showTokenSelector, setShowTokenSelector] = useState(false);
-  
+
   // Chart data state
   const [chartData, setChartData] = useState([]);
   const [ohlcvData, setOhlcvData] = useState([]);
@@ -48,7 +50,7 @@ export function PriceChart({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [priceChange, setPriceChange] = useState(null);
-  
+
   // Chart color options from theme
   const chartColorOptions = [
     { name: 'primary', color: colors.primary, label: 'Blue' },
@@ -81,13 +83,13 @@ export function PriceChart({
         .select('*')
         .order('widget_count', { ascending: false })
         .limit(50);
-      
+
       if (searchQuery) {
         query = query.or(`symbol.ilike.%${searchQuery}%,name.ilike.%${searchQuery}%`);
       }
-      
+
       const { data, error } = await query;
-      
+
       if (error) throw error;
       setTokens(data || []);
     } catch (err) {
@@ -103,7 +105,7 @@ export function PriceChart({
         .select('*')
         .eq('id', tokenId)
         .single();
-      
+
       if (error) throw error;
       if (data) {
         setSelectedToken(data);
@@ -118,25 +120,25 @@ export function PriceChart({
   async function fetchChartData(token, customTimeRange) {
     setLoading(true);
     setError(null);
-    
+
     try {
       const range = customTimeRange || timeRange;
       const response = await getTokenMarketChart(token.address, 'usd', parseInt(range));
-      
+
       // Extract actual data from cache wrapper
       const chartInfo = response.data || response;
-      
+
       if (!chartInfo || !chartInfo.prices || chartInfo.prices.length === 0) {
         throw new Error('No chart data available for this token');
       }
-      
+
       setChartData(chartInfo.prices);
-      
+
       // Store OHLCV data for candlestick charts
       if (chartInfo.ohlcv && chartInfo.ohlcv.length > 0) {
         setOhlcvData(chartInfo.ohlcv);
       }
-      
+
       // Calculate price change
       if (chartInfo.prices.length > 1) {
         const firstPrice = chartInfo.prices[0].price;
@@ -156,7 +158,7 @@ export function PriceChart({
     setSelectedToken(token);
     setShowTokenSelector(false);
     fetchChartData(token);
-    
+
     // Update config
     if (onUpdateConfig) {
       onUpdateConfig({
@@ -263,7 +265,7 @@ export function PriceChart({
     const candleWidth = Math.max(width * 0.6, 2);
     const centerX = x + width / 2 - candleWidth / 2;
     const candleColor = isGreen ? '#16a34a' : '#dc2626';
-    
+
     return (
       <rect
         x={centerX}
@@ -332,13 +334,13 @@ export function PriceChart({
       <div>
         <p className="text-white font-medium mb-2">Selected Token</p>
         <p className="text-xs text-white/60 mb-3">Choose which token to track</p>
-        
+
         {/* Current Selection */}
         {selectedToken && (
           <div className="mb-3 p-3 bg-white/5 rounded-lg flex items-center gap-3">
             {selectedToken.logo_url ? (
-              <img 
-                src={selectedToken.logo_url} 
+              <img
+                src={selectedToken.logo_url}
                 alt={selectedToken.symbol}
                 className="w-8 h-8 rounded-full"
               />
@@ -357,7 +359,7 @@ export function PriceChart({
             </div>
           </div>
         )}
-        
+
         {/* Search */}
         <input
           type="text"
@@ -376,7 +378,7 @@ export function PriceChart({
           }}
           className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-white/40 focus:outline-none focus:border-white/30 mb-2"
         />
-        
+
         {/* Token List */}
         {showTokenSelector && (
           <div className="max-h-48 overflow-y-auto space-y-1 bg-white/5 rounded-lg p-2">
@@ -392,8 +394,8 @@ export function PriceChart({
                   className="w-full flex items-center gap-2 p-2 hover:bg-white/10 rounded transition-colors text-left"
                 >
                   {token.logo_url ? (
-                    <img 
-                      src={token.logo_url} 
+                    <img
+                      src={token.logo_url}
                       alt={token.symbol}
                       className="w-6 h-6 rounded-full"
                     />
@@ -402,7 +404,7 @@ export function PriceChart({
                       {token.symbol[0]}
                     </div>
                   )}
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1">
                       <span className="font-semibold text-white text-xs truncate">
@@ -424,19 +426,20 @@ export function PriceChart({
       </div>
 
       {/* Time Range Selector */}
-      <div className="border-t border-white/10 pt-4">
-        <p className="text-white font-medium mb-2">Time Range</p>
-        <p className="text-xs text-white/60 mb-3">Select chart time period</p>
-        <div className="flex gap-2">
+      <div className="border-t border-white/5 pt-4 flex justify-between items-center">
+        <div>
+          <p className="text-white font-medium">Time Range</p>
+          <p className="text-xs text-white/60">Select chart time period</p>
+        </div>
+        <div className="flex gap-2 bg-white/5 rounded-full p-2">
           {timeRanges.map((range) => (
             <button
               key={range.value}
               onClick={() => handleTimeRangeChange(range.value)}
-              className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
-                timeRange === range.value
-                  ? 'bg-white/20 text-white'
-                  : 'bg-white/5 text-white/60 hover:bg-white/10'
-              }`}
+              className={`flex-1 px-3 py-2 rounded-full text-xs font-medium transition-colors cursor-pointer w-full ${timeRange === range.value
+                ? 'bg-white text-black'
+                : 'bg-white/5 text-white/60 hover:bg-white/10'
+                }`}
             >
               {range.label}
             </button>
@@ -445,74 +448,78 @@ export function PriceChart({
       </div>
 
       {/* Chart Type Selector */}
-      <div className="border-t border-white/10 pt-4">
-        <p className="text-white font-medium mb-2">Chart Type</p>
-        <p className="text-xs text-white/60 mb-3">Choose visualization style</p>
-        <div className="flex gap-2">
+      <div className="border-t border-white/5 pt-4 flex justify-between items-center">
+        <div>
+          <p className="text-white font-medium">Chart Type</p>
+          <p className="text-xs text-white/60">Choose visualization style</p>
+        </div>
+        <div className="flex gap-2 bg-white/5 rounded-full p-2">
           <button
             onClick={() => handleChangeChartType('line')}
-            className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
-              chartType === 'line'
-                ? 'bg-white/20 text-white'
-                : 'bg-white/5 text-white/60 hover:bg-white/10'
-            }`}
+            className={`flex-1 px-3 py-2 rounded-full text-xs font-medium transition-colors flex items-center justify-center gap-2 cursor-pointer ${chartType === 'line'
+              ? 'bg-white text-black'
+              : 'bg-white/5 text-white/60 hover:bg-white/10'
+              }`}
           >
-            📈 Line
+            <HugeiconsIcon icon={ChartAverageIcon} className="w-4 h-4" />
           </button>
           <button
             onClick={() => handleChangeChartType('candle')}
-            className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
-              chartType === 'candle'
-                ? 'bg-white/20 text-white'
-                : 'bg-white/5 text-white/60 hover:bg-white/10'
-            }`}
+            className={`flex-1 px-3 py-2 rounded-full text-xs font-medium transition-colors flex items-center justify-center gap-2 cursor-pointer ${chartType === 'candle'
+              ? 'bg-white text-black'
+              : 'bg-white/5 text-white/60 hover:bg-white/10'
+              }`}
           >
-            📊 Candle
+            <HugeiconsIcon icon={WaterfallUp01Icon} className="w-4 h-4" />
           </button>
-        </div>
-      </div>
-
-      {/* Price Info Toggle */}
-      <div className="border-t border-white/10 pt-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="text-white font-medium">Price Info</p>
-            <p className="text-xs text-white/60">Show current price and change</p>
-          </div>
-          <Switch isOn={showPriceInfo} onToggle={handleTogglePriceInfo} />
         </div>
       </div>
 
       {/* Chart Color Selector */}
-      <div className="border-t border-white/10 pt-4">
-        <p className="text-white font-medium mb-2">Chart Color</p>
-        <p className="text-xs text-white/60 mb-3">Choose line color</p>
-        <div className="flex gap-2 items-center">
-          {chartColorOptions.map((colorOption) => (
-            <button
-              key={colorOption.name}
-              onClick={() => handleChangeChartColor(colorOption.name)}
-              className={`w-10 h-10 rounded-lg cursor-pointer relative transition-all ${
-                chartColor === colorOption.name ? 'ring-2 ring-white ring-offset-2 ring-offset-gray-900' : ''
-              }`}
-              style={{ backgroundColor: colorOption.color }}
-              title={colorOption.label}
-            >
-              {chartColor === colorOption.name && (
-                <motion.div
-                  layoutId="chart-color-indicator"
-                  className="absolute inset-0 rounded-lg"
-                  transition={{
-                    type: "spring",
-                    visualDuration: 0.2,
-                    bounce: 0.2,
-                  }}
-                />
-              )}
-            </button>
-          ))}
+      {chartType === 'line' && (
+        <div className="border-t border-white/5 pt-4 flex justify-between items-center">
+          <div>
+            <p className="text-white font-medium">Chart Color</p>
+            <p className="text-xs text-white/60">Choose line color</p>
+          </div>
+          <div className="flex gap-2  p-2">
+            {chartColorOptions.map((colorOption) => (
+              <button
+                key={colorOption.name}
+                onClick={() => handleChangeChartColor(colorOption.name)}
+                className={`w-10 h-10 rounded-lg cursor-pointer relative transition-all ${chartColor === colorOption.name ? 'ring-2 ring-white ring-offset-2 ring-offset-gray-900' : ''
+                  }`}
+                style={{ backgroundColor: colorOption.color }}
+                title={colorOption.label}
+              >
+                {chartColor === colorOption.name && (
+                  <motion.div
+                    layoutId="chart-color-indicator"
+                    className="absolute inset-0 rounded-lg"
+                    transition={{
+                      type: "spring",
+                      visualDuration: 0.2,
+                      bounce: 0.2,
+                    }}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
+      )}
+
+      {/* Price Info Toggle */}
+      <div className="border-t border-white/5 pt-4">
+        <CardSettingsToggle
+          title="Price Info"
+          description="Show current price and change"
+          isOn={showPriceInfo}
+          onToggle={handleTogglePriceInfo}
+        />
       </div>
+
+
     </div>
   );
 
@@ -551,7 +558,7 @@ export function PriceChart({
         ) : loading ? (
           // Loading
           <div className="text-center flex items-center justify-center h-full">
-              <Spinner />
+            <Spinner />
           </div>
         ) : error ? (
           // Error
@@ -570,9 +577,8 @@ export function PriceChart({
                 <div className="text-2xl font-bold mb-1">
                   {formatPrice(chartData[chartData.length - 1].price)}
                 </div>
-                <div className={`text-sm font-semibold ${
-                  priceChange >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
+                <div className={`text-sm font-semibold ${priceChange >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
                   {priceChange >= 0 ? '↑' : '↓'} {Math.abs(priceChange).toFixed(2)}%
                 </div>
               </div>
@@ -585,20 +591,20 @@ export function PriceChart({
                   <LineChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                     <defs>
                       <linearGradient id={`colorPrice-${chartColor}`} x1="0" y1="0" x2="0" y2="1">
-                        <stop 
-                          offset="5%" 
-                          stopColor={chartColorOptions.find(c => c.name === chartColor)?.color} 
+                        <stop
+                          offset="5%"
+                          stopColor={chartColorOptions.find(c => c.name === chartColor)?.color}
                           stopOpacity={0.3}
                         />
-                        <stop 
-                          offset="95%" 
-                          stopColor={chartColorOptions.find(c => c.name === chartColor)?.color} 
+                        <stop
+                          offset="95%"
+                          stopColor={chartColorOptions.find(c => c.name === chartColor)?.color}
                           stopOpacity={0}
                         />
                       </linearGradient>
                     </defs>
-                    
-                    <XAxis 
+
+                    <XAxis
                       dataKey="timestamp"
                       tick={false}
                       stroke="currentColor"
@@ -606,7 +612,7 @@ export function PriceChart({
                       tickLine={false}
                       axisLine={false}
                     />
-                    <YAxis 
+                    <YAxis
                       tick={false}
                       stroke="currentColor"
                       opacity={0.1}
@@ -615,10 +621,10 @@ export function PriceChart({
                       width={0}
                       domain={['auto', 'auto']}
                     />
-                    
+
                     {/* Horizontal line at current price */}
                     {chartData.length > 0 && (
-                      <ReferenceLine 
+                      <ReferenceLine
                         y={chartData[chartData.length - 1].price}
                         stroke={chartColorOptions.find(c => c.name === chartColor)?.color}
                         strokeDasharray="3 3"
@@ -626,12 +632,12 @@ export function PriceChart({
                         strokeWidth={1}
                       />
                     )}
-                    
+
                     <Tooltip content={<CustomTooltip />} />
-                    
-                    <Line 
-                      type="monotone" 
-                      dataKey="price" 
+
+                    <Line
+                      type="monotone"
+                      dataKey="price"
                       stroke={chartColorOptions.find(c => c.name === chartColor)?.color}
                       strokeWidth={2}
                       dot={false}
@@ -641,7 +647,7 @@ export function PriceChart({
                   </LineChart>
                 ) : (
                   <ComposedChart data={ohlcvData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                    <XAxis 
+                    <XAxis
                       dataKey="timestamp"
                       tick={false}
                       stroke="currentColor"
@@ -649,7 +655,7 @@ export function PriceChart({
                       tickLine={false}
                       axisLine={false}
                     />
-                    <YAxis 
+                    <YAxis
                       tick={false}
                       stroke="currentColor"
                       opacity={0.1}
@@ -658,13 +664,13 @@ export function PriceChart({
                       width={0}
                       domain={['auto', 'auto']}
                     />
-                    
+
                     {/* Horizontal line at current price */}
                     {ohlcvData.length > 0 && (() => {
                       const lastCandle = ohlcvData[ohlcvData.length - 1];
                       const isGreen = lastCandle.close >= lastCandle.open;
                       return (
-                        <ReferenceLine 
+                        <ReferenceLine
                           y={lastCandle.close}
                           stroke={isGreen ? '#16a34a' : '#dc2626'}
                           strokeDasharray="3 3"
@@ -673,18 +679,18 @@ export function PriceChart({
                         />
                       );
                     })()}
-                    
+
                     <Tooltip content={<CandleTooltip />} />
-                    
+
                     {/* Candlestick wicks (high-low range) */}
-                    <Bar 
-                      dataKey={(entry) => [entry.low, entry.high]} 
+                    <Bar
+                      dataKey={(entry) => [entry.low, entry.high]}
                       fill="transparent"
                       shape={(props) => <CandleWick {...props} />}
                     />
-                    
+
                     {/* Candlestick bodies (open-close range) */}
-                    <Bar 
+                    <Bar
                       dataKey={(entry) => [Math.min(entry.open, entry.close), Math.max(entry.open, entry.close)]}
                       shape={(props) => <CandleBody {...props} data={props.payload} />}
                     />

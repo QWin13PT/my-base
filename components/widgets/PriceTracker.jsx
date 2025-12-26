@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Card from '@/components/cards/Card';
 import { supabase } from '@/lib/supabase';
 import { getTokenPrice } from '@/lib/api/coingecko';
+import CardSettingsToggle from '@/components/cards/CardSettingsToggle';
 
 export default function PriceTracker({ 
   config = {}, 
@@ -13,6 +14,7 @@ export default function PriceTracker({
   const [showTitle, setShowTitle] = useState(config.showTitle ?? false);
   const [showSubtitle, setShowSubtitle] = useState(config.showSubtitle ?? false);
   const [showImage, setShowImage] = useState(config.showImage ?? true);
+  const [showStats, setShowStats] = useState(config.showStats ?? true);
   const [variant, setVariant] = useState(config.variant || 'default');
   const [isFixed, setIsFixed] = useState(config.isFixed || false);
   
@@ -171,6 +173,12 @@ export default function PriceTracker({
     onUpdateConfig?.({ ...config, showImage: newValue });
   };
 
+  const handleToggleStats = () => {
+    const newValue = !showStats;
+    setShowStats(newValue);
+    onUpdateConfig?.({ ...config, showStats: newValue });
+  };
+
   const handleChangeVariant = (newVariant) => {
     setVariant(newVariant);
     onUpdateConfig?.({ ...config, variant: newVariant });
@@ -296,6 +304,14 @@ export default function PriceTracker({
           </div>
         )}
       </div>
+
+      {/* Stats Visibility Toggle */}
+      <CardSettingsToggle
+        title="Market Stats"
+        description="Display market cap and volume"
+        isOn={showStats}
+        onToggle={handleToggleStats}
+      />
     </div>
   );
 
@@ -347,7 +363,7 @@ export default function PriceTracker({
                 </div>
                 
                 {/* 24h Change */}
-                <div className={`text-base font-semibold mb-6 ${
+                <div className={`text-base font-semibold ${showStats ? 'mb-6' : ''} ${
                   priceData.change24h >= 0 ? 'text-green-600' : 'text-red-600'
                 }`}>
                   {priceData.change24h >= 0 ? '↑' : '↓'} 
@@ -355,20 +371,22 @@ export default function PriceTracker({
                 </div>
                 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-4 text-left">
-                  <div className="bg-current/5 rounded-lg p-3">
-                    <p className="text-xs opacity-60 mb-1">Market Cap</p>
-                    <p className="text-sm font-semibold">
-                      {formatLargeNumber(priceData.marketCap)}
-                    </p>
+                {showStats && (
+                  <div className="grid grid-cols-2 gap-4 text-left">
+                    <div className="bg-current/5 rounded-lg p-3">
+                      <p className="text-xs opacity-60 mb-1">Market Cap</p>
+                      <p className="text-sm font-semibold">
+                        {formatLargeNumber(priceData.marketCap)}
+                      </p>
+                    </div>
+                    <div className="bg-current/5 rounded-lg p-3">
+                      <p className="text-xs opacity-60 mb-1">24h Volume</p>
+                      <p className="text-sm font-semibold">
+                        {formatLargeNumber(priceData.volume24h)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="bg-current/5 rounded-lg p-3">
-                    <p className="text-xs opacity-60 mb-1">24h Volume</p>
-                    <p className="text-sm font-semibold">
-                      {formatLargeNumber(priceData.volume24h)}
-                    </p>
-                  </div>
-                </div>
+                )}
               </>
             ) : null}
           </div>

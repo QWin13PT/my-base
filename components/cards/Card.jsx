@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import Image from 'next/image';
 import { DragDropHorizontalIcon, MoreVerticalIcon, Delete02Icon, PinIcon, Cancel01Icon } from '@hugeicons-pro/core-solid-standard';
-import Switch from '@/components/ui/Switch';
 import { motion, AnimatePresence, stagger } from 'motion/react';
 import Button from '@/components/ui/Button';
+import CardSettingsToggle from '@/components/cards/CardSettingsToggle';
 
 // Animation variants for the circular background reveal
 const backgroundVariants = {
@@ -184,55 +184,39 @@ const Card = ({
                             </motion.div>
 
                             {/* Title Toggle */}
-                            <motion.div
-                                variants={itemVariants}
-                                className="flex justify-between items-center"
-                            >
-                                <div>
-                                    <p className="text-white font-medium">Title</p>
-                                    <p className="text-xs text-white/60">Display title on top of the widget</p>
-                                </div>
-                                <Switch isOn={showTitle} onToggle={onToggleTitle} />
+                            <motion.div variants={itemVariants}>
+                                <CardSettingsToggle
+                                    title="Title"
+                                    description="Display title on top of the widget"
+                                    isOn={showTitle}
+                                    onToggle={onToggleTitle}
+                                />
                             </motion.div>
 
                             {/* Subtitle Toggle */}
-                            <motion.div
-                                variants={itemVariants}
-                                className="flex justify-between items-center"
-                            >
-                                <div>
-                                    <p className="text-white font-medium">Subtitle</p>
-                                    <p className="text-xs text-white/60">Display subtitle description</p>
-                                </div>
-                                <Switch isOn={showSubtitle} onToggle={onToggleSubtitle} />
+                            <motion.div variants={itemVariants}>
+                                <CardSettingsToggle
+                                    title="Subtitle"
+                                    description="Display subtitle description"
+                                    isOn={showSubtitle}
+                                    onToggle={onToggleSubtitle}
+                                />
                             </motion.div>
 
                             {/* Image Toggle - Only show if image exists */}
                             {image && (
-                                <motion.div
-                                    variants={itemVariants}
-                                    className="flex justify-between items-center"
-                                >
-                                    <div>
-                                        <p className="text-white font-medium">Image</p>
-                                        <p className="text-xs text-white/60">Display image icon</p>
-                                    </div>
-                                    <Switch isOn={showImage} onToggle={onToggleImage} />
+                                <motion.div variants={itemVariants}>
+                                    <CardSettingsToggle
+                                        title="Image"
+                                        description="Display image icon"
+                                        isOn={showImage}
+                                        onToggle={onToggleImage}
+                                    />
                                 </motion.div>
                             )}
 
-                            {/* Custom Settings from Widget */}
-                            {customSettings && (
-                                <motion.div
-                                    variants={itemVariants}
-                                    className="border-t border-white/10 pt-4"
-                                >
-                                    {customSettings}
-                                </motion.div>
-                            )}
-
-                            {/* Theme Toggle */}
-                            <motion.div variants={itemVariants} className="flex items-center gap-2 justify-between">
+                             {/* Theme Toggle */}
+                             <motion.div variants={itemVariants} className="flex items-center gap-2 justify-between">
                                 <div>
                                     <p className="text-white font-medium">Theme</p>
                                     <p className="text-xs text-white/60">Change the theme of the widget</p>
@@ -261,6 +245,18 @@ const Card = ({
                                     ))}
                                 </div>
                             </motion.div>
+
+                            {/* Custom Settings from Widget */}
+                            {customSettings && (
+                                <motion.div
+                                    variants={itemVariants}
+                                    className="border-t border-white/10 pt-4"
+                                >
+                                    {customSettings}
+                                </motion.div>
+                            )}
+
+                           
 
 
                             <motion.div variants={itemVariants} className="flex items-center gap-2 justify-between pt-2 border-t border-white/10">
