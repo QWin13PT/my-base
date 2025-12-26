@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { appConfig } from "@/lib/config";
 import { ConnectWallet } from "./ConnectWallet";
 import WidgetsModal from "./WidgetsModal";
@@ -18,15 +20,15 @@ import { Outfit } from "next/font/google";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
-const Header = ({ 
-  layouts = [], 
-  activeLayoutId, 
-  onSwitchLayout, 
+const Header = ({
+  layouts = [],
+  activeLayoutId,
+  onSwitchLayout,
   onCreateLayout,
   onRenameLayout,
   onDeleteLayout,
   onDuplicateLayout,
-  onAddWidget 
+  onAddWidget
 }) => {
   const { activeNetwork, disconnect, formatAddress } = useWallet();
   const { user } = useUser();
@@ -79,14 +81,15 @@ const Header = ({
   return (
     <header className="bg-dark border-b border-white/10">
       <div className="mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between gap-16">
-
-
         <div className="flex items-center justify-between flex-1">
-          <div>
-            <h1 className={`text-3xl font-bold text-white lowercase ${outfit.className} select-none `}>
-              {appConfig.name}
-            </h1>
-          </div>
+          <Link href="/">
+            <div className="flex items-center gap-1">
+              <Image src="/images/logos/mybase.svg" alt="Logo" width={60} height={60} />
+              <h1 className={`text-3xl font-bold text-white lowercase ${outfit.className} select-none `}>
+                {appConfig.name}
+              </h1>
+            </div>
+          </Link>
           {/* Search bar and add button */}
           <div className="flex items-center gap-4">
             {/* Layout Dropdown */}

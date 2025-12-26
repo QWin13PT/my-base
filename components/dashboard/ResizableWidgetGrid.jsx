@@ -6,13 +6,15 @@ import Card from '@/components/cards/Card';
 import 'react-grid-layout/css/styles.css';
 
 // Import all widget components
-import { PriceTracker, PriceChart, FearGreedIndex } from '@/components/widgets';
+import { PriceTracker, PriceChart, FearGreedIndex, GasTracker, TrendingTokens } from '@/components/widgets';
 
 // Widget type mapping
 const WIDGET_COMPONENTS = {
   'price-tracker': PriceTracker,
   'price-chart': PriceChart,
   'fear-greed-index': FearGreedIndex,
+  'gas-tracker': GasTracker,
+  'trending-tokens': TrendingTokens,
 };
 
 /**
