@@ -1,9 +1,13 @@
 'use client';
 
 import { useMemo, useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import GridLayout from 'react-grid-layout';
 import Card from '@/components/cards/Card';
+import Button from '@/components/ui/Button';
 import 'react-grid-layout/css/styles.css';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Add01Icon } from '@hugeicons-pro/core-solid-standard';
 
 // Import all widget components
 import { PriceTracker, PriceChart, FearGreedIndex, GasTracker, TrendingTokens } from '@/components/widgets';
@@ -21,7 +25,7 @@ const WIDGET_COMPONENTS = {
  * ResizableWidgetGrid - Simple draggable and resizable grid
  * Responsive to parent container width using custom hook
  */
-const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange }) => {
+const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange, onOpenAddWidget }) => {
   const containerRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(1200);
   const [gridMargin, setGridMargin] = useState(32); // gap-8 (32px) default
@@ -118,6 +122,34 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange }) => {
     );
     onWidgetsChange?.(updatedWidgets);
   };
+
+  // Show empty state if no widgets
+  if (widgets.length === 0) {
+    return (
+      <div className="w-full flex flex-col items-center justify-center min-h-[400px] py-16">
+        <div className="text-center space-y-6 max-w-md flex flex-col items-center justify-center">
+          <div className="mb-4 bg-white/10 rounded-3xl  h-16 w-16 flex items-center justify-center"><Image src="/images/logos/mybase.svg" alt="Dashboard" width={60} height={60} /></div>
+          <h2 className="text-2xl font-semibold text-white">
+            No widgets yet
+          </h2>
+          <p className="text-gray-400 text-base">
+            Add widgets to customize your dashboard and track the information that matters to you.
+          </p>
+          {onOpenAddWidget && (
+            <div className="pt-4">
+              <Button
+                variant="primary"
+                onClick={onOpenAddWidget}
+                icon={<HugeiconsIcon icon={Add01Icon} className="w-4 h-4" />}
+              >
+                Add Widget
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className="w-full">

@@ -28,6 +28,7 @@ export default function Home() {
   } = useLayouts(user?.id);
 
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [isWidgetsModalOpen, setIsWidgetsModalOpen] = useState(false);
   
   // Get widgets from active layout
   const widgets = activeLayout?.widgets || [];
@@ -75,6 +76,9 @@ export default function Home() {
         onDeleteLayout={deleteLayout}
         onDuplicateLayout={duplicateLayout}
         onAddWidget={handleAddWidget}
+        isWidgetsModalOpen={isWidgetsModalOpen}
+        onOpenWidgetsModal={() => setIsWidgetsModalOpen(true)}
+        onCloseWidgetsModal={() => setIsWidgetsModalOpen(false)}
       />
 
       {/* Onboarding Modal */}
@@ -89,6 +93,7 @@ export default function Home() {
         <ResizableWidgetGrid
           widgets={widgets}
           onWidgetsChange={handleUpdateWidgets}
+          onOpenAddWidget={() => setIsWidgetsModalOpen(true)}
         />
       </main>
     </>

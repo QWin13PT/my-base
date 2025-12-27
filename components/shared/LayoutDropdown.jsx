@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
@@ -27,8 +27,12 @@ export default function LayoutDropdown({
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
   const [menuOpenId, setMenuOpenId] = useState(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+  const menuButtonRefs = useRef({});
 
   const activeLayout = layouts.find(l => l.id === activeLayoutId);
+  const MAX_LAYOUTS = 3;
+  const hasReachedLimit = layouts.length >= MAX_LAYOUTS;
 
   const handleRename = (layoutId) => {
     if (editName.trim()) {
@@ -39,6 +43,7 @@ export default function LayoutDropdown({
   };
 
   const handleCreateNew = () => {
+    if (hasReachedLimit) return;
     const newLayout = onCreateLayout();
     if (newLayout) {
       onSwitchLayout(newLayout.id);
@@ -86,9 +91,14 @@ export default function LayoutDropdown({
             >
               {/* Header */}
               <div className="px-4 py-3 border-b border-white/10">
-                <h3 className="text-xs font-semibold text-black/60 uppercase tracking-wide">
-                  Your Dashboards
-                </h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-semibold text-black/60 uppercase tracking-wide">
+                    Your Views
+                  </h3>
+                  <span className="text-xs font-medium text-black/40">
+                    {layouts.length}/{MAX_LAYOUTS}
+                  </span>
+                </div>
               </div>
 
               {/* Layouts List */}
@@ -145,6 +155,7 @@ export default function LayoutDropdown({
                       {editingId !== layout.id && (
                         <div className="relative">
                           <Button
+                            ref={(el) => (menuButtonRefs.current[layout.id] = el)}
                             variant="outline"
                             size="sm"
                             className="!text-black/60 !border-dark/10 h-8 w-8 !p-0"
@@ -152,13 +163,27 @@ export default function LayoutDropdown({
                             iconPosition="right"
                             onClick={(e) => {
                               e.stopPropagation();
+                              const button = menuButtonRefs.current[layout.id];
+                              if (button) {
+                                const rect = button.getBoundingClientRect();
+                                setMenuPosition({
+                                  top: rect.top,
+                                  left: rect.left - 168, // 160px width + 8px gap
+                                });
+                              }
                               setMenuOpenId(menuOpenId === layout.id ? null : layout.id);
                             }}
                           />
 
-                          {/* Actions Submenu */}
+                          {/* Actions Submenu - Fixed positioning to overlay dropdown */}
                           {menuOpenId === layout.id && (
-                            <div className="absolute right-full top-0 mr-2 w-40 p-1 bg-white rounded-2xl shadow-xl border border-black/10 overflow-hidden z-10">
+                            <div 
+                              className="fixed w-40 p-1 bg-white rounded-2xl shadow-xl border border-black/10 overflow-hidden z-[60]"
+                              style={{
+                                top: `${menuPosition.top}px`,
+                                left: `${menuPosition.left}px`,
+                              }}
+                            >
                               <button
                                 onClick={() => {
                                   setEditingId(layout.id);
@@ -172,10 +197,17 @@ export default function LayoutDropdown({
                               </button>
                               <button
                                 onClick={() => {
-                                  onDuplicateLayout(layout.id);
-                                  setMenuOpenId(null);
+                                  if (!hasReachedLimit) {
+                                    onDuplicateLayout(layout.id);
+                                    setMenuOpenId(null);
+                                  }
                                 }}
-                                className="w-full px-3 py-2 text-left text-sm text-black hover:bg-black/5 flex items-center gap-2 rounded-xl cursor-pointer"
+                                disabled={hasReachedLimit}
+                                className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 rounded-xl ${
+                                  hasReachedLimit 
+                                    ? 'text-black/30 cursor-not-allowed' 
+                                    : 'text-black hover:bg-black/5 cursor-pointer'
+                                }`}
                               >
                                 <HugeiconsIcon icon={Copy01Icon} className="w-4 h-4" />
                                 Duplicate
@@ -204,17 +236,16 @@ export default function LayoutDropdown({
               {/* Create New Button */}
               <div className="px-4 py-3 border-t border-white/10">
                 <Button
-                  variant="primary"
+                 variant="primary"
                   size="sm"
                   icon={<HugeiconsIcon icon={Add01Icon} className="w-4 h-4" />}
-                  onClick={() => {
-                    handleCreateNew();
-                    setIsOpen(false);
-                  }}
+                  onClick={handleCreateNew}
                   className="w-full"
+                  disabled={hasReachedLimit}
                 >
-                  Create View
+                  {hasReachedLimit ? `Maximum Reached (${MAX_LAYOUTS}/${MAX_LAYOUTS})` : 'Create View'}
                 </Button>
+                
               </div>
             </motion.div>
           </>

@@ -29,20 +29,36 @@ const Header = ({
   onRenameLayout,
   onDeleteLayout,
   onDuplicateLayout,
-  onAddWidget
+  onAddWidget,
+  isWidgetsModalOpen: externalIsWidgetsModalOpen,
+  onOpenWidgetsModal: externalOnOpenWidgetsModal,
+  onCloseWidgetsModal: externalOnCloseWidgetsModal,
 }) => {
   const { activeNetwork, disconnect, formatAddress } = useWallet();
   const { user } = useUser();
   const { address, isConnected } = useAccount();
   const { currency, currencies, changeCurrency } = useCurrency();
-  const [isWidgetsModalOpen, setIsWidgetsModalOpen] = useState(false);
+  const [internalIsWidgetsModalOpen, setInternalIsWidgetsModalOpen] = useState(false);
+
+  // Use external modal state if provided, otherwise use internal state
+  const isWidgetsModalOpen = externalIsWidgetsModalOpen !== undefined 
+    ? externalIsWidgetsModalOpen 
+    : internalIsWidgetsModalOpen;
 
   const handleOpenWidgetsModal = () => {
-    setIsWidgetsModalOpen(true);
+    if (externalOnOpenWidgetsModal) {
+      externalOnOpenWidgetsModal();
+    } else {
+      setInternalIsWidgetsModalOpen(true);
+    }
   };
 
   const handleCloseWidgetsModal = () => {
-    setIsWidgetsModalOpen(false);
+    if (externalOnCloseWidgetsModal) {
+      externalOnCloseWidgetsModal();
+    } else {
+      setInternalIsWidgetsModalOpen(false);
+    }
   };
 
   const handleAddWidget = (widget) => {

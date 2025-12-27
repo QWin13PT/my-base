@@ -1,7 +1,8 @@
 import { motion } from 'motion/react';
 import Image from 'next/image';
+import { forwardRef } from 'react';
 
-const Button = ({ children, onClick, className = '', variant = 'default', size = 'md', rounded = 'full', disabled = false, icon = null, iconPosition = 'right', loading = false, image = null }) => {
+const Button = forwardRef(({ children, onClick, className = '', variant = 'default', size = 'md', rounded = 'full', disabled = false, icon = null, iconPosition = 'right', loading = false, image = null }, ref) => {
     const variantClasses = {
         default: 'bg-white text-black hover:bg-gray-100',
         primary: 'bg-blue-600 text-white hover:bg-blue-700',
@@ -25,6 +26,7 @@ const Button = ({ children, onClick, className = '', variant = 'default', size =
     };
     return (
         <motion.button 
+            ref={ref}
             className={`cursor-pointer transition-all rounded-full font-medium flex items-center ${image ? 'justify-start' : 'justify-center'} gap-2  ${variantClasses[variant]} ${className} ${sizeClasses[size]} ${roundedClasses[rounded]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} 
             onClick={onClick}
             disabled={disabled}
@@ -45,6 +47,8 @@ const Button = ({ children, onClick, className = '', variant = 'default', size =
             {icon && iconPosition === 'right' && icon}
         </motion.button>
     );
-};
+});
+
+Button.displayName = 'Button';
 
 export default Button;

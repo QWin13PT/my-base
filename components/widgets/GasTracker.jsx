@@ -254,8 +254,8 @@ export default function GasTracker({
 
   return (
     <Card
-      title="Gas Tracker"
-      description="Base Network Gas Prices"
+      title="Base Gas Tracker"
+      description={`Updated: ${new Date().toLocaleTimeString()} • Block: ${gasData.lastBlock}`}
       image="/images/logos/base.svg"
       showTitle={showTitle}
       showSubtitle={showSubtitle}
@@ -286,7 +286,7 @@ export default function GasTracker({
           </div>
         ) : gasData ? (
           <>
-            {/* Best Time Indicator */}
+            {/* Best Time Indicator 
             {bestTime && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -300,19 +300,19 @@ export default function GasTracker({
                   </span>
                 </div>
               </motion.div>
-            )}
+            )}*/}
 
             {/* Current Gas Prices */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="flex gap-4">
               {/* Safe */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1 }}
-                className="bg-current/5 rounded-xl p-3 text-center"
+                className="bg-current/5 rounded-xl p-3 text-center flex-1"
               >
                 <div className="flex items-center justify-center gap-1 mb-1">
-                  <span className="text-base">🟢</span>
+                  <span className="text-base bg-green-500 rounded-full w-3 h-3" />
                   <p className="text-xs font-medium opacity-60">Safe</p>
                 </div>
                 <p className="text-lg font-bold text-green-500">
@@ -328,10 +328,10 @@ export default function GasTracker({
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.15 }}
-                className="bg-current/5 rounded-xl p-3 text-center"
+                className="bg-current/5 rounded-xl p-3 text-center flex-1"
               >
                 <div className="flex items-center justify-center gap-1 mb-1">
-                  <span className="text-base">⛽</span>
+                  <span className="text-base bg-yellow-500 rounded-full p-1 w-3 h-3" />
                   <p className="text-xs font-medium opacity-60">Standard</p>
                 </div>
                 <p className="text-lg font-bold text-yellow-500">
@@ -347,10 +347,10 @@ export default function GasTracker({
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2 }}
-                className="bg-current/5 rounded-xl p-3 text-center"
+                className="bg-current/5 rounded-xl p-3 text-center flex-1"
               >
                 <div className="flex items-center justify-center gap-1 mb-1">
-                  <HugeiconsIcon icon={Activity02Icon} className="w-4 h-4 text-red-500" />
+                  <span className="text-base bg-red-500 rounded-full w-3 h-3" />
                   <p className="text-xs font-medium opacity-60">Fast</p>
                 </div>
                 <p className="text-lg font-bold text-red-500">
@@ -360,11 +360,6 @@ export default function GasTracker({
                   {formatUSD(calculateCostUSD(gasData.fastGasPrice))}
                 </p>
               </motion.div>
-            </div>
-
-            {/* Block Info */}
-            <div className="text-xs opacity-40 text-center">
-              Updated: {new Date().toLocaleTimeString()} • Block: {gasData.lastBlock}
             </div>
 
             {/* Historical Chart */}
