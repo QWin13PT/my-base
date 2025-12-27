@@ -11,6 +11,8 @@ import { Add01Icon } from '@hugeicons-pro/core-solid-standard';
 
 // Import all widget components
 import { PriceTracker, PriceChart, FearGreedIndex, GasTracker, TrendingTokens } from '@/components/widgets';
+// Import widget constraints
+import { getWidgetConstraints } from '@/lib/widgets';
 
 // Widget type mapping
 const WIDGET_COMPONENTS = {
@@ -28,7 +30,7 @@ const WIDGET_COMPONENTS = {
 const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange, onOpenAddWidget }) => {
   const containerRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(1200);
-  const [gridMargin, setGridMargin] = useState(32); // gap-8 (32px) default
+  const [gridMargin, setGridMargin] = useState(16); // gap-8 (32px) default
 
   // Measure container width and calculate responsive margin on mount and resize
   useEffect(() => {
@@ -46,20 +48,25 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange, onOpenAddWidget })
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  // Convert widgets to react-grid-layout format
+  // Convert widgets to react-grid-layout format with per-widget constraints
   const layout = useMemo(() => {
-    return widgets.map((widget, index) => ({
-      i: widget.id,
-      x: widget.x ?? (index % 4) * 3,
-      y: widget.y ?? Math.floor(index / 4) * 2,
-      w: widget.w ?? 3,
-      h: widget.h ?? 2,
-      minW: 2,
-      minH: 1,
-      maxW: 12,
-      maxH: 6,
-      static: widget.isFixed ?? false, // Add static property for fixed cards
-    }));
+    return widgets.map((widget, index) => {
+      // Get constraints for this specific widget type
+      const constraints = getWidgetConstraints(widget.type);
+      
+      return {
+        i: widget.id,
+        x: widget.x ?? (index % 4) * 3,
+        y: widget.y ?? Math.floor(index / 4) * 2,
+        w: widget.w ?? constraints.defaultW,
+        h: widget.h ?? constraints.defaultH,
+        minW: constraints.minW,
+        maxW: constraints.maxW,
+        minH: constraints.minH,
+        maxH: constraints.maxH,
+        static: widget.isFixed ?? false,
+      };
+    });
   }, [widgets]);
 
   const handleLayoutChange = (newLayout) => {
@@ -156,14 +163,16 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange, onOpenAddWidget })
       <GridLayout
         className="layout"
         layout={layout}
-        cols={12}
-        rowHeight={240}
+        gridConfig={{
+          cols: 12,
+          rowHeight: 192,
+          margin: [gridMargin, gridMargin],
+        }}
         width={containerWidth}
         onLayoutChange={handleLayoutChange}
         draggableHandle=".drag-handle"
         compactType="vertical"
         preventCollision={false}
-        margin={[gridMargin, gridMargin]}
         isDraggable={true}
         isResizable={true}
         resizeHandles={['se', 'sw', 'ne', 'nw']}

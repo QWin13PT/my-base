@@ -129,7 +129,7 @@ const Card = ({
                     <div className="flex w-full justify-between items-start">
                         <div className="flex flex-col gap-1 ">
                             {showTitle && <h3 className="text-lg font-semibold">{title}</h3>}
-                            {showSubtitle && <p className={`text-sm ${variant === 'white' ? 'text-black/80' : 'text-white/80'}`}>{description}</p>}
+                            {showSubtitle && <p className={`text-sm truncate ${variant === 'white' ? 'text-black/80' : 'text-white/80'}`}>{description}</p>}
                         </div>
                         <div className="flex items-center gap-2">
                             {isFixed && (

@@ -112,8 +112,20 @@ export default function GasTracker({
         return updated.slice(-100);
       });
     } catch (err) {
-      console.error('Error fetching gas prices:', err);
-      setError(err.message || 'Failed to fetch gas prices');
+      console.error('Error fetching gas data:', err);
+      setError(err.message || 'Network error - unable to fetch gas prices');
+      
+      // If we have no data at all, set some fallback data
+      if (!gasData) {
+        setGasData({
+          safeGasPrice: '0.001',
+          proposeGasPrice: '0.001',
+          fastGasPrice: '0.002',
+          suggestBaseFee: '0.001',
+          gasUsedRatio: '0.5',
+          lastBlock: 'N/A',
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -255,7 +267,7 @@ export default function GasTracker({
   return (
     <Card
       title="Base Gas Tracker"
-      description={`Updated: ${new Date().toLocaleTimeString()} • Block: ${gasData.lastBlock}`}
+      description={gasData ? `Updated: ${new Date().toLocaleTimeString()} • Block: ${gasData.lastBlock}` : 'Loading gas data...'}
       image="/images/logos/base.svg"
       showTitle={showTitle}
       showSubtitle={showSubtitle}

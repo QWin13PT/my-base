@@ -1,8 +1,10 @@
 'use client';
 
 import Modal from '@/components/ui/Modal';
+import { getWidgetConstraints } from '@/lib/widgets';
 
 // Available widgets organized by category
+// Note: defaultSize is now automatically pulled from WIDGET_CONSTRAINTS in lib/widgets.js
 const WIDGET_CATEGORIES = [
   {
     id: 'market',
@@ -13,28 +15,24 @@ const WIDGET_CATEGORIES = [
         type: 'price-tracker',
         title: 'Price Tracker',
         description: 'Track real-time prices for popular Base tokens',
-        defaultSize: { w: 2, h: 3 },
       },
       {
         id: 'price-chart',
         type: 'price-chart',
         title: 'Price Chart',
         description: 'View historical price charts with multiple time ranges',
-        defaultSize: { w: 3, h: 3 },
       },
       {
         id: 'trending-tokens',
         type: 'trending-tokens',
         title: 'Trending Tokens',
         description: 'Top performing Base tokens by volume, price change, or market cap',
-        defaultSize: { w: 2, h: 3 },
       },
       {
         id: 'fear-greed-index',
         type: 'fear-greed-index',
         title: 'Fear & Greed Index',
         description: 'Track crypto market sentiment with the Fear & Greed Index',
-        defaultSize: { w: 2, h: 2 },
       },
     ],
   },
@@ -47,7 +45,6 @@ const WIDGET_CATEGORIES = [
         type: 'gas-tracker',
         title: 'Gas Tracker',
         description: 'Real-time gas prices with historical chart and best time indicator',
-        defaultSize: { w: 3, h: 3 },
       },
     ],
   },
@@ -56,7 +53,17 @@ const WIDGET_CATEGORIES = [
 const WidgetsModal = ({ isOpen, onClose, onAddWidget }) => {
   const handleWidgetClick = (widget) => {
     if (onAddWidget) {
-      onAddWidget(widget);
+      // Get default size from widget constraints
+      const constraints = getWidgetConstraints(widget.type);
+      
+      // Create widget with default size from constraints
+      const widgetWithDefaults = {
+        ...widget,
+        w: constraints.defaultW,
+        h: constraints.defaultH,
+      };
+      
+      onAddWidget(widgetWithDefaults);
     }
     // Optionally close modal after adding
     // onClose();
