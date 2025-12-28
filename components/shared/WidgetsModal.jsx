@@ -65,8 +65,8 @@ const WidgetsModal = ({ isOpen, onClose, onAddWidget }) => {
       
       onAddWidget(widgetWithDefaults);
     }
-    // Optionally close modal after adding
-    // onClose();
+    // Close modal after adding widget
+    onClose();
   };
 
   return (

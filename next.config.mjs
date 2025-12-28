@@ -7,6 +7,11 @@ const nextConfig = {
         hostname: 'assets.coingecko.com',
         pathname: '/coins/images/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'uowqxdiukuxwjvzhtomd.supabase.co',
+        pathname: '/storage/v1/object/public/avatars/**',
+      },
     ],
   },
   webpack: (config, { isServer }) => {

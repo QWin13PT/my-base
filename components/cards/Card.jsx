@@ -119,17 +119,17 @@ const Card = ({
                     <HugeiconsIcon icon={DragDropHorizontalIcon} className="w-5 h-5" />
                 </div>
             )}
-             <div className="flex items-center justify-center mb-4 gap-4">
+             <div className="flex items-center justify-start mb-4 gap-4">
                  {image && showImage && (
                      <div className="">
-                         <Image src={image} alt={title} width={60} height={60} className="rounded-full aspect-square flex items-center justify-center " />
+                         <Image src={image} alt={title} width={60} height={60} className="rounded-full aspect-square flex items-center justify-center min-w-10 min-h-10" />
                      </div>
                  )}
                 {title && description && (
                     <div className="flex w-full justify-between items-start">
-                        <div className="flex flex-col gap-1 ">
-                            {showTitle && <h3 className="text-lg font-semibold">{title}</h3>}
-                            {showSubtitle && <p className={`text-sm truncate ${variant === 'white' ? 'text-black/80' : 'text-white/80'}`}>{description}</p>}
+                        <div className="flex flex-col gap-1 overflow-hidden">
+                            {showTitle && <h3 className="text-lg font-semibold truncate w-full">{title}</h3>}
+                            {showSubtitle && <p className={`text-sm truncate w-full ${variant === 'white' ? 'text-black/80' : 'text-white/80'}`}>{description}</p>}
                         </div>
                         <div className="flex items-center gap-2">
                             {isFixed && (
