@@ -10,7 +10,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Add01Icon } from '@hugeicons-pro/core-solid-standard';
 
 // Import all widget components
-import { PriceTracker, PriceChart, FearGreedIndex, GasTracker, TrendingTokens } from '@/components/widgets';
+import { PriceTracker, PriceChart, VolumeChart, FearGreedIndex, GasTracker, TrendingTokens } from '@/components/widgets';
 // Import widget constraints
 import { getWidgetConstraints } from '@/lib/widgets';
 
@@ -18,6 +18,7 @@ import { getWidgetConstraints } from '@/lib/widgets';
 const WIDGET_COMPONENTS = {
   'price-tracker': PriceTracker,
   'price-chart': PriceChart,
+  'volume-chart': VolumeChart,
   'fear-greed-index': FearGreedIndex,
   'gas-tracker': GasTracker,
   'trending-tokens': TrendingTokens,

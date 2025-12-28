@@ -31,6 +31,13 @@ const WIDGET_CATEGORIES = [
         needsToken: true,
       },
       {
+        id: 'volume-chart',
+        type: 'volume-chart',
+        title: 'Volume Chart',
+        description: 'Trading volume chart with historical data and statistics',
+        needsToken: true,
+      },
+      {
         id: 'trending-tokens',
         type: 'trending-tokens',
         title: 'Trending Tokens',
