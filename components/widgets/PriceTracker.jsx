@@ -5,6 +5,7 @@ import Card from '@/components/cards/Card';
 import { supabase } from '@/lib/supabase';
 import { getTokenPrice } from '@/lib/api/coingecko';
 import CardSettingsToggle from '@/components/cards/CardSettingsToggle';
+import CardSettingsTokenSelect from '@/components/cards/CardSettingsTokenSelect';
 import { useCurrency } from '@/lib/contexts/CurrencyContext';
 
 export default function PriceTracker({ 
@@ -24,9 +25,6 @@ export default function PriceTracker({
   
   // Token selection state
   const [selectedToken, setSelectedToken] = useState(config.tokenId ? null : null);
-  const [tokens, setTokens] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showTokenSelector, setShowTokenSelector] = useState(false);
   
   // Price data state
   const [priceData, setPriceData] = useState(null);
@@ -69,28 +67,6 @@ export default function PriceTracker({
       }
     } catch (err) {
       console.error('Error loading token:', err);
-    }
-  }
-
-  // Fetch tokens for selector
-  async function loadTokens() {
-    try {
-      let query = supabase
-        .from('tokens')
-        .select('id, address, symbol, name, logo_url, category, verified')
-        .order('verified', { ascending: false })
-        .order('symbol', { ascending: true });
-      
-      if (searchQuery) {
-        query = query.or(`symbol.ilike.%${searchQuery}%,name.ilike.%${searchQuery}%`);
-      }
-      
-      const { data, error } = await query.limit(50);
-      
-      if (error) throw error;
-      setTokens(data || []);
-    } catch (err) {
-      console.error('Error loading tokens:', err);
     }
   }
 
@@ -229,99 +205,12 @@ export default function PriceTracker({
   const customSettings = (
     <div className="space-y-4">
       {/* Token Selector */}
-      <div>
-        <p className="text-white font-medium mb-2">Selected Token</p>
-        <p className="text-xs text-white/60 mb-3">Choose which token to track</p>
-        
-        {/* Current Selection */}
-        {selectedToken && (
-          <div className="mb-3 p-3 bg-white/5 rounded-lg flex items-center gap-3">
-            {selectedToken.logo_url ? (
-              <img 
-                src={selectedToken.logo_url} 
-                alt={selectedToken.symbol}
-                className="w-8 h-8 rounded-full"
-              />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs">
-                {selectedToken.symbol[0]}
-              </div>
-            )}
-            <div className="flex-1">
-              <div className="font-semibold text-white text-sm">
-                {selectedToken.symbol}
-              </div>
-              <div className="text-xs text-white/60">
-                {selectedToken.name}
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {/* Search */}
-        <input
-          type="text"
-          placeholder="Search tokens..."
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            if (!showTokenSelector) {
-              setShowTokenSelector(true);
-              loadTokens();
-            }
-          }}
-          onFocus={() => {
-            setShowTokenSelector(true);
-            loadTokens();
-          }}
-          className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-white/40 focus:outline-none focus:border-white/30 mb-2"
-        />
-        
-        {/* Token List (shown when searching) */}
-        {showTokenSelector && (
-          <div className="max-h-48 overflow-y-auto space-y-1 bg-white/5 rounded-lg p-2">
-            {tokens.length === 0 ? (
-              <p className="text-center text-white/60 py-4 text-sm">
-                No tokens found
-              </p>
-            ) : (
-              tokens.map((token) => (
-                <button
-                  key={token.id}
-                  onClick={() => handleTokenSelect(token)}
-                  className="w-full flex items-center gap-2 p-2 hover:bg-white/10 rounded transition-colors text-left"
-                >
-                  {token.logo_url ? (
-                    <img 
-                      src={token.logo_url} 
-                      alt={token.symbol}
-                      className="w-6 h-6 rounded-full"
-                    />
-                  ) : (
-                    <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs">
-                      {token.symbol[0]}
-                    </div>
-                  )}
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1">
-                      <span className="font-semibold text-white text-xs truncate">
-                        {token.symbol}
-                      </span>
-                      {token.verified && (
-                        <span className="text-xs text-blue-400">✓</span>
-                      )}
-                    </div>
-                    <p className="text-xs text-white/60 truncate">
-                      {token.name}
-                    </p>
-                  </div>
-                </button>
-              ))
-            )}
-          </div>
-        )}
-      </div>
+      <CardSettingsTokenSelect
+        selectedToken={selectedToken}
+        onTokenSelect={handleTokenSelect}
+        title="Selected Token"
+        description="Choose which token to track"
+      />
 
       {/* Stats Visibility Toggle */}
       <CardSettingsToggle

@@ -92,7 +92,7 @@ const Card = ({
         { name: 'default', class: 'bg-white/10 backdrop-blur-md' },
         { name: 'primary', class: 'bg-primary' },
         { name: 'white', class: 'bg-white' },
-        { name: 'outline', class: 'bg-white/5 backdrop-blur-md border-2 border-white/10' },
+        { name: 'outline', class: 'bg-transparent backdrop-blur-md border-2 border-white/10' },
     ];
 
     const variantClasses = {
@@ -100,7 +100,7 @@ const Card = ({
         primary: 'bg-primary',
         white: 'bg-white',
         highlight: 'bg-highlight',
-        outline: 'bg-white/5 backdrop-blur-md border-2 border-white/10',
+        outline: 'bg-transparent backdrop-blur-md border-2 border-white/10',
     };
 
     // Text color variants - black text for light backgrounds
