@@ -52,8 +52,8 @@ export function VolumeChart({
   const chartColorOptions = [
     { name: 'primary', color: colors.primary, label: 'Blue' },
     { name: 'accent', color: colors.accent, label: 'Cyan' },
-    { name: 'green', color: '#22c55e', label: 'Green' },
-    { name: 'purple', color: '#a855f7', label: 'Purple' },
+    { name: 'white', color: '#ffffff', label: 'White' },
+    { name: 'black', color: '#000000', label: 'Black' },
   ];
 
   // Time range options
@@ -325,7 +325,7 @@ export function VolumeChart({
   return (
     <Card
       title={selectedToken ? `Volume Chart - ${selectedToken.name}` : 'Volume Chart - Loading...'}
-      description={selectedToken ? `${selectedToken.symbol} Trading Volume` : 'Token volume chart - Loading...'}
+      description={`Last ${timeRange}${timeRange === '1' ? ' day' : timeRange === '365' ? ' days' : timeRange === '30' ? ' days' : timeRange === 'max' ? ' (max)' : ' days'}`}
       image={selectedToken ? selectedToken.logo_url : null}
       showTitle={showTitle}
       showSubtitle={showSubtitle}

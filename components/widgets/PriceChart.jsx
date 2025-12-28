@@ -428,8 +428,8 @@ export function PriceChart({
 
   return (
     <Card
-      title={selectedToken ? `Price Chart - ${selectedToken.name}` : 'Price Chart - Loading...'}
-      description={selectedToken ? `${selectedToken.symbol} / ${currency.code}` : 'Token price chart - Loading...'}
+      title={selectedToken ? `Price Chart - ${selectedToken.symbol} / ${currency.code}` : 'Price Chart - Loading...'}
+      description={`Last ${timeRange}${timeRange === '1' ? ' day' : timeRange === '365' ? ' days' : timeRange === '30' ? ' days' : timeRange === 'max' ? ' (max)' : ' days'}`}
       image={selectedToken ? selectedToken.logo_url : null}
       showTitle={showTitle}
       showSubtitle={showSubtitle}
