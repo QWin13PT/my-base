@@ -24,6 +24,8 @@ import { useCurrency } from '@/lib/contexts/CurrencyContext';
 
 export default function GasTracker({
   config = {},
+  isSettingsOpen = false,
+  onToggleSettings,
   onUpdateConfig,
   onDelete
 }) {
@@ -275,6 +277,8 @@ export default function GasTracker({
       variant={variant}
       isFixed={isFixed}
       draggable={true}
+      isSettingsOpen={isSettingsOpen}
+      onToggleSettings={onToggleSettings}
       onToggleTitle={handleToggleTitle}
       onToggleSubtitle={handleToggleSubtitle}
       onToggleImage={handleToggleImage}

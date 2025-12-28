@@ -7,6 +7,8 @@ const API_URL = 'https://api.alternative.me/fng/?limit=2';
 
 export function FearGreedIndex({ 
   config = {},
+  isSettingsOpen = false,
+  onToggleSettings,
   onUpdateConfig,
   onDelete 
 }) {
@@ -102,6 +104,8 @@ export function FearGreedIndex({
       variant={variant}
       isFixed={isFixed}
       draggable={true}
+      isSettingsOpen={isSettingsOpen}
+      onToggleSettings={onToggleSettings}
       onToggleTitle={handleToggleTitle}
       onToggleSubtitle={handleToggleSubtitle}
       onChangeVariant={handleChangeVariant}
@@ -109,7 +113,7 @@ export function FearGreedIndex({
       onDelete={onDelete}
       className="h-full flex flex-col"
     >
-      <div className="flex-1 flex flex-col items-center justify-center">
+      <div className="flex-1 flex flex-col items-center justify-center h-full">
         {loading ? (
           <div className="text-center">
             <div className="animate-pulse">
@@ -123,8 +127,8 @@ export function FearGreedIndex({
             <p className="text-xs opacity-60">{error}</p>
           </div>
         ) : data ? (
-          <div className="relative w-full h-full flex items-center justify-center">
-            <div className="w-full max-w-[300px] aspect-[2/1] relative">
+          <div className="relative w-full h-full flex items-center justify-center flex-1">
+            <div className="w-full max-w-full relative">
               <svg 
                 className="w-full h-auto" 
                 viewBox="0 0 177 89" 

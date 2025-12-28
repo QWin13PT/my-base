@@ -27,7 +27,7 @@ const Button = forwardRef(({ children, onClick, className = '', variant = 'defau
     return (
         <motion.button 
             ref={ref}
-            className={`cursor-pointer transition-all rounded-full font-medium flex items-center ${image ? 'justify-start' : 'justify-center'} gap-2  ${variantClasses[variant]} ${className} ${sizeClasses[size]} ${roundedClasses[rounded]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} 
+            className={`cursor-pointer transition-all rounded-full font-medium flex items-center whitespace-nowrap  ${image ? 'justify-start' : 'justify-center'} gap-2  ${variantClasses[variant]} ${className} ${sizeClasses[size]} ${roundedClasses[rounded]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} 
             onClick={onClick}
             disabled={disabled}
             whileTap={{ scale: disabled ? 1 : 0.95 }}

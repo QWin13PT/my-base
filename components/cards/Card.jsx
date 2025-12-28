@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import Image from 'next/image';
 import { DragDropHorizontalIcon, MoreVerticalIcon, Delete02Icon, PinIcon, Cancel01Icon } from '@hugeicons-pro/core-solid-standard';
@@ -77,6 +76,8 @@ const Card = ({
     showSubtitle = true,
     showImage = true,
     isFixed = false,
+    isSettingsOpen = false, // Controlled from parent
+    onToggleSettings, // Handler from parent
     onToggleTitle,
     onToggleSubtitle,
     onToggleImage,
@@ -85,7 +86,6 @@ const Card = ({
     onChangeVariant,
     customSettings, // Custom settings content from widgets
 }) => {
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     // Theme options
     const themeOptions = [
@@ -133,14 +133,14 @@ const Card = ({
                         </div>
                         <div className="flex items-center gap-2">
                             {isFixed && (
-                                <div className={variant === 'white' ? 'text-black/50' : 'text-white/50'}>
+                                <button className={variant === 'white' ? 'text-black/50 cursor-pointer' : 'text-white/50 cursor-pointer'} onClick={onToggleFixed}>
                                     <HugeiconsIcon icon={PinIcon} className="w-4 h-4" />
-                                </div>
+                                </button>
                             )}
                             <button
                                 className={`cursor-pointer transition-colors p-2 rounded-full relative z-30 ${variant === 'white' ? 'text-black/50 hover:text-black/80 hover:bg-black/5' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
                                 type="button"
-                                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                                onClick={onToggleSettings}
                             >
                                 <HugeiconsIcon
                                     icon={isSettingsOpen ? Cancel01Icon : MoreVerticalIcon}
@@ -152,7 +152,7 @@ const Card = ({
                 )}
              </div>
 
-            <div className={`transition-all duration-300 ${isSettingsOpen ? 'opacity-50 blur-[2px]' : ''}`}>
+            <div className={`transition-all duration-300 flex-1 h-full ${isSettingsOpen ? 'opacity-50 blur-[2px]' : ''}`}>
                 {children}
             </div>
 
@@ -264,8 +264,7 @@ const Card = ({
                                 {/* Delete Button */}
                                 <Button
                                     onClick={onDelete}
-
-                                    icon={<HugeiconsIcon icon={Delete02Icon} className="w-5 h-5" />}
+                                    icon={<HugeiconsIcon icon={Delete02Icon} className="w-4 h-4" />}
                                     className="w-full"
                                 >
                                     Remove Widget
@@ -274,7 +273,7 @@ const Card = ({
                                 <Button
                                     variant={isFixed ? "primary" : "outline"}
                                     onClick={onToggleFixed}
-                                    icon={<HugeiconsIcon icon={PinIcon} className="w-5 h-5" />}
+                                    icon={<HugeiconsIcon icon={PinIcon} className="w-4 h-4" />}
                                 />
                             </motion.div>
                         </motion.div>

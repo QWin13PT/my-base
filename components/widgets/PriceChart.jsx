@@ -27,6 +27,8 @@ import { useCurrency } from '@/lib/contexts/CurrencyContext';
 
 export function PriceChart({
   config = {},
+  isSettingsOpen = false,
+  onToggleSettings,
   onUpdateConfig,
   onDelete
 }) {
@@ -112,17 +114,20 @@ export function PriceChart({
         throw new Error('No chart data available for this token');
       }
 
-      setChartData(chartInfo.prices);
+      // Reverse the data to ensure chronological order (oldest to newest)
+      const reversedPrices = [...chartInfo.prices].reverse();
+      setChartData(reversedPrices);
 
-      // Store OHLCV data for candlestick charts
+      // Store OHLCV data for candlestick charts (also reverse it)
       if (chartInfo.ohlcv && chartInfo.ohlcv.length > 0) {
-        setOhlcvData(chartInfo.ohlcv);
+        const reversedOhlcv = [...chartInfo.ohlcv].reverse();
+        setOhlcvData(reversedOhlcv);
       }
 
-      // Calculate price change
-      if (chartInfo.prices.length > 1) {
-        const firstPrice = chartInfo.prices[0].price;
-        const lastPrice = chartInfo.prices[chartInfo.prices.length - 1].price;
+      // Calculate price change (first = oldest, last = newest)
+      if (reversedPrices.length > 1) {
+        const firstPrice = reversedPrices[0].price;
+        const lastPrice = reversedPrices[reversedPrices.length - 1].price;
         const change = ((lastPrice - firstPrice) / firstPrice) * 100;
         setPriceChange(change);
       }
@@ -432,6 +437,8 @@ export function PriceChart({
       variant={variant}
       isFixed={isFixed}
       draggable={true}
+      isSettingsOpen={isSettingsOpen}
+      onToggleSettings={onToggleSettings}
       onToggleTitle={handleToggleTitle}
       onToggleSubtitle={handleToggleSubtitle}
       onToggleImage={handleToggleImage}
@@ -483,7 +490,7 @@ export function PriceChart({
             )}
 
             {/* Chart */}
-            <div className="w-full" style={{ minHeight: '200px' }}>
+            <div className="w-full [&_svg]:outline-none [&_*]:outline-none" style={{ minHeight: '200px' }}>
               <ResponsiveContainer width="100%" height={300} debounce={50}>
                 {chartType === 'line' ? (
                   <LineChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>

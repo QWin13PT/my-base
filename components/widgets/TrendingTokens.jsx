@@ -8,6 +8,8 @@ import { useCurrency } from '@/lib/contexts/CurrencyContext';
 
 export default function TrendingTokens({ 
   config = {}, 
+  isSettingsOpen = false,
+  onToggleSettings,
   onUpdateConfig,
   onDelete 
 }) {
@@ -357,6 +359,8 @@ export default function TrendingTokens({
       variant={variant}
       isFixed={isFixed}
       draggable={true}
+      isSettingsOpen={isSettingsOpen}
+      onToggleSettings={onToggleSettings}
       onToggleTitle={handleToggleTitle}
       onToggleSubtitle={handleToggleSubtitle}
       onToggleImage={handleToggleImage}

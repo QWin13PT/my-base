@@ -31,6 +31,7 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange, onOpenAddWidget })
   const containerRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(1200);
   const [gridMargin, setGridMargin] = useState(16); // gap-8 (32px) default
+  const [openSettingsWidgetId, setOpenSettingsWidgetId] = useState(null); // Track which widget has settings open
 
   // Measure container width and calculate responsive margin on mount and resize
   useEffect(() => {
@@ -130,6 +131,11 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange, onOpenAddWidget })
     onWidgetsChange?.(updatedWidgets);
   };
 
+  const handleToggleSettings = (widgetId) => {
+    // If clicking the same widget, close it. Otherwise, open the new one.
+    setOpenSettingsWidgetId(prevId => prevId === widgetId ? null : widgetId);
+  };
+
   // Show empty state if no widgets
   if (widgets.length === 0) {
     return (
@@ -193,6 +199,8 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange, onOpenAddWidget })
                     isFixed: widget.isFixed || false,
                     tokenId: widget.tokenId,
                   }}
+                  isSettingsOpen={openSettingsWidgetId === widget.id}
+                  onToggleSettings={() => handleToggleSettings(widget.id)}
                   onUpdateConfig={(newConfig) => {
                     const updatedWidgets = widgets.map((w) =>
                       w.id === widget.id ? { ...w, ...newConfig } : w
@@ -212,6 +220,8 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange, onOpenAddWidget })
                   showTitle={widget.showTitle !== false}
                   showSubtitle={widget.showSubtitle !== false}
               isFixed={widget.isFixed || false}
+              isSettingsOpen={openSettingsWidgetId === widget.id}
+              onToggleSettings={() => handleToggleSettings(widget.id)}
               onToggleTitle={() => handleToggleTitle(widget.id)}
               onToggleSubtitle={() => handleToggleSubtitle(widget.id)}
               onToggleFixed={() => handleToggleFixed(widget.id)}

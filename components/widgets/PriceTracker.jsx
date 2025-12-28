@@ -10,6 +10,8 @@ import { useCurrency } from '@/lib/contexts/CurrencyContext';
 
 export default function PriceTracker({ 
   config = {}, 
+  isSettingsOpen = false,
+  onToggleSettings,
   onUpdateConfig,
   onDelete 
 }) {
@@ -233,6 +235,8 @@ export default function PriceTracker({
       variant={variant}
       isFixed={isFixed}
       draggable={true}
+      isSettingsOpen={isSettingsOpen}
+      onToggleSettings={onToggleSettings}
       onToggleTitle={handleToggleTitle}
       onToggleSubtitle={handleToggleSubtitle}
       onToggleImage={handleToggleImage}
