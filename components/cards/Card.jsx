@@ -119,6 +119,13 @@ const Card = ({
                     <HugeiconsIcon icon={DragDropHorizontalIcon} className="w-5 h-5" />
                 </div>
             )}
+            {isFixed && (
+                <div className={`absolute top-0 left-0 right-0 flex justify-center items-center py-2 z-10 ${variant === 'white' ? 'text-black/50' : 'text-white/50'}`}>
+                    <button onClick={onToggleFixed} className="cursor-pointer transition-colors hover:opacity-80">
+                        <HugeiconsIcon icon={PinIcon} className="w-4 h-4" />
+                    </button>
+                </div>
+            )}
              <div className="flex items-center justify-start mb-4 gap-4">
                  {image && showImage && (
                      <div className="">
@@ -132,11 +139,6 @@ const Card = ({
                             {showSubtitle && <p className={`text-sm truncate w-full ${variant === 'white' ? 'text-black/80' : 'text-white/80'}`}>{description}</p>}
                         </div>
                         <div className="flex items-center gap-2">
-                            {isFixed && (
-                                <button className={variant === 'white' ? 'text-black/50 cursor-pointer' : 'text-white/50 cursor-pointer'} onClick={onToggleFixed}>
-                                    <HugeiconsIcon icon={PinIcon} className="w-4 h-4" />
-                                </button>
-                            )}
                             <button
                                 className={`cursor-pointer transition-colors p-2 rounded-full relative z-30 ${variant === 'white' ? 'text-black/50 hover:text-black/80 hover:bg-black/5' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
                                 type="button"

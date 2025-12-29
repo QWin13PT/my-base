@@ -1,5 +1,5 @@
 /**
- * API Configuration for MyBase Dashboard
+ * API Configuration for Otlyn Dashboard
  * Centralized configuration for all external API endpoints
  */
 

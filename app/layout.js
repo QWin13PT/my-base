@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import { WalletProvider } from "@/components/providers/WalletProvider";
 import { CurrencyProvider } from "@/lib/contexts/CurrencyContext";
+import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { appConfig } from "@/lib/config";
 import Script from "next/script";
 import "./globals.css";
@@ -46,11 +47,13 @@ export default function RootLayout({ children }) {
         className={`${inter.variable} antialiased bg-dark text-white min-h-screen`}
         suppressHydrationWarning
       >
-        <WalletProvider>
-          <CurrencyProvider>
-            {children}
-          </CurrencyProvider>
-        </WalletProvider>
+        <QueryProvider>
+          <WalletProvider>
+            <CurrencyProvider>
+              {children}
+            </CurrencyProvider>
+          </WalletProvider>
+        </QueryProvider>
       </body>
     </html>
   );

@@ -100,12 +100,11 @@ const Header = ({
           </Button>
         </div>
       ),
-      onClick: () => { }, // Info display, no action
+      nonInteractive: true, // Info display with interactive button inside, render as div
     },
     {
       label: 'Profile',
       href: '/profile',
-      onClick: () => { }, // Navigation handled by href
     },
     {
       label: 'Logout',
@@ -158,7 +157,7 @@ const Header = ({
           <Link href="/">
             <div className="flex items-center gap-1">
               <Image src="/images/logos/mybase.svg" alt="Logo" width={60} height={60} />
-              <h1 className={`text-3xl font-bold text-white lowercase ${outfit.className} select-none `}>
+              <h1 className={`text-3xl font-bold text-white  ${outfit.className} select-none `}>
                 {appConfig.name}
               </h1>
             </div>

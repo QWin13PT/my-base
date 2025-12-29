@@ -70,6 +70,22 @@ export default function Dropdown({ trigger, items, children, className = '', var
                                 );
                             }
                             
+                            // If item is non-interactive (marked as such or no onClick), render as div
+                            if (item.nonInteractive || !item.onClick) {
+                                return (
+                                    <div
+                                        key={index}
+                                        className={`w-full text-left px-4 py-2.5 text-sm rounded-xl ${
+                                            item.danger 
+                                                ? 'text-red-400' 
+                                                : `${variant === 'dark' ? 'text-white' : 'text-black'}`
+                                        }`}
+                                    >
+                                        {item.label}
+                                    </div>
+                                );
+                            }
+                            
                             // Otherwise render as button
                             return (
                                 <button
