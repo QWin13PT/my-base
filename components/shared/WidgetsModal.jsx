@@ -66,6 +66,19 @@ const WIDGET_CATEGORIES = [
       },
     ],
   },
+  {
+    id: 'portfolio',
+    title: 'Portfolio & Wallet',
+    widgets: [
+      {
+        id: 'portfolio-tracker',
+        type: 'portfolio-tracker',
+        title: 'Portfolio Tracker',
+        description: 'Visualize your wallet holdings with a beautiful pie chart. Tracks top Base tokens with live prices.',
+        needsToken: false,
+      },
+    ],
+  },
 ];
 
 const WidgetsModal = ({ isOpen, onClose, onAddWidget }) => {

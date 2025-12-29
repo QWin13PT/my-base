@@ -7,10 +7,10 @@
  */
 
 import {
-  PriceTrackerWidget,
-  NetworkStatsWidget,
-  GasTrackerWidget,
-  PortfolioWidget,
+  PriceTracker,
+  GasTracker,
+  TrendingTokens,
+  PortfolioTracker,
 } from '@/components/widgets';
 
 export default function WidgetShowcase() {
@@ -28,38 +28,22 @@ export default function WidgetShowcase() {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {/* Price Tracker - Takes 2 columns */}
           <div className="lg:col-span-2">
-            <PriceTrackerWidget />
-          </div>
-
-          {/* Network Stats */}
-          <div className="lg:col-span-1">
-            <NetworkStatsWidget />
+            <PriceTracker />
           </div>
 
           {/* Gas Tracker */}
           <div className="lg:col-span-1">
-            <GasTrackerWidget />
+            <GasTracker />
           </div>
 
-          {/* Portfolio - Takes 2 columns */}
+          {/* Portfolio Tracker - Takes 2 columns */}
           <div className="lg:col-span-2">
-            <PortfolioWidget />
+            <PortfolioTracker />
           </div>
-        </div>
 
-        {/* Custom Token Price Tracker */}
-        <div className="mt-6">
-          <h2 className="text-2xl font-bold mb-4">Custom Token List</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Meme Coins Only */}
-            <PriceTrackerWidget 
-              tokens={['BRETT', 'DEGEN', 'TOSHI', 'NORMIE']} 
-            />
-            
-            {/* Stablecoins Only */}
-            <PriceTrackerWidget 
-              tokens={['USDC', 'USDT', 'DAI']} 
-            />
+          {/* Trending Tokens */}
+          <div className="lg:col-span-1">
+            <TrendingTokens />
           </div>
         </div>
 

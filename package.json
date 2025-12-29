@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "fetch-tokens": "node --experimental-modules scripts/fetch-base-tokens.js",
-    "check-tokens": "node --experimental-modules scripts/check-tokens.js"
+    "check-tokens": "node --experimental-modules scripts/check-tokens.js",
+    "test-moralis": "node --experimental-modules scripts/test-moralis.js"
   },
   "dependencies": {
     "@coinbase/onchainkit": "^1.1.2",

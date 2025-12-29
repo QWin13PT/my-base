@@ -9,4 +9,5 @@ export { default as VolumeChart } from './VolumeChart';
 export { default as FearGreedIndex } from './FearGreedIndex';
 export { default as GasTracker } from './GasTracker';
 export { default as TrendingTokens } from './TrendingTokens';
+export { default as PortfolioTracker } from './PortfolioTracker';
 
