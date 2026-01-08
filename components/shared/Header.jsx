@@ -156,7 +156,7 @@ const Header = ({
         <div className="flex items-center justify-between flex-1">
           <Link href="/">
             <div className="flex items-center gap-1">
-              <Image src="/images/logos/mybase.svg" alt="Logo" width={60} height={60} />
+              <Image src="/images/logos/otlyn.svg" alt="Logo" width={60} height={60} />
               <h1 className={`text-3xl font-bold text-white  ${outfit.className} select-none `}>
                 {appConfig.name}
               </h1>

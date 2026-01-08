@@ -2,7 +2,7 @@
 @import "@coinbase/onchainkit/styles.css";
 
 @theme {
-  /* MyBase custom colors from lib/theme.js */
+  /* Otlyn custom colors from lib/theme.js */
   --color-dark: #000;
   --color-primary: #0052FF;
   --color-accent: #00D1FF;

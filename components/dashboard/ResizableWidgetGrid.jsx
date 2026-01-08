@@ -142,7 +142,7 @@ const ResizableWidgetGrid = ({ widgets = [], onWidgetsChange, onOpenAddWidget })
     return (
       <div className="w-full flex flex-col items-center justify-center min-h-[400px] py-16">
         <div className="text-center space-y-6 max-w-md flex flex-col items-center justify-center">
-          <div className="mb-4 bg-white/10 rounded-3xl  h-16 w-16 flex items-center justify-center"><Image src="/images/logos/mybase.svg" alt="Dashboard" width={60} height={60} /></div>
+          <div className="mb-4 bg-white/10 rounded-3xl  h-16 w-16 flex items-center justify-center"><Image src="/images/logos/otlyn.svg" alt="Dashboard" width={60} height={60} /></div>
           <h2 className="text-2xl font-semibold text-white">
             No widgets yet
           </h2>
